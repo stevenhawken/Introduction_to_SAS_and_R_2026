@@ -31,6 +31,8 @@ resources:
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
+## Today {.smaller}
+
 ```{webr}
 #| include: false
 #| autorun: true
@@ -45,8 +47,6 @@ screening <- read_csv("data/screening.csv", show_col_types = FALSE)
 theme_set(theme_minimal(base_size = 13))
 invisible(TRUE)
 ```
-
-## Today {.smaller}
 
 ::: {.cols}
 <div>
@@ -101,7 +101,6 @@ Three files, exactly the shape of a real linked extract:
 Those two mismatches are the whole lesson of the joins section. Fully synthetic data —
 safe to share, safe to paste anywhere.</p>
 
----
 
 # The workflow {.section-break}
 
@@ -245,14 +244,16 @@ births |>
 
 ::: {.rs .smaller}
 <div class="r-side">
-#### R
+<h4>R</h4>
+
 ```r
 filter(ga_weeks < 37)
 select(id, ga_weeks)
 ```
 </div>
 <div class="sas-side">
-#### SAS
+<h4>SAS</h4>
+
 ```sas
 IF ga_weeks < 37;
 KEEP id ga_weeks;
@@ -311,13 +312,15 @@ births |>
 ```
 
 ::: {.hint exercise="ex_mutate"}
-#### Hint
+<h4>Hint</h4>
+
 The conventional low-birth-weight cut-point is 2500 g. To tabulate a variable in `dplyr`,
 the verb is `count()`.
 :::
 
 ::: {.solution exercise="ex_mutate"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_mutate
 #| solution: true
@@ -380,13 +383,15 @@ births |>
 ```
 
 ::: {.hint exercise="ex_group"}
-#### Hint
+<h4>Hint</h4>
+
 The grouping verb is `group_by()`. `n()` counts rows in the current group (no arguments).
 `sd()` is the standard deviation.
 :::
 
 ::: {.solution exercise="ex_group"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_group
 #| solution: true
@@ -401,7 +406,6 @@ births |>
 ```
 :::
 
----
 
 # Joins {.section-break background-color="#8b1d41"}
 
@@ -438,13 +442,15 @@ anti_join(a, b, by = "id")
 
 ::: {.rs .smaller}
 <div class="r-side">
-#### R
+<h4>R</h4>
+
 ```r
 left_join(births, mothers, by = "momid")
 ```
 </div>
 <div class="sas-side">
-#### SAS
+<h4>SAS</h4>
+
 ```sas
 DATA out; MERGE births(IN=a) mothers;
   BY momid; IF a; RUN;
@@ -454,7 +460,7 @@ DATA out; MERGE births(IN=a) mothers;
 
 ---
 
-## The join that ruins analyses {.time}live{.smaller}
+## The join that ruins analyses [live]{.time} {.smaller}
 
 ```{webr}
 #| autorun: true
@@ -569,13 +575,15 @@ nrow(analysis) == nrow(births)
 ```
 
 ::: {.hint exercise="ex_join"}
-#### Hint
+<h4>Hint</h4>
+
 You want only the *first* specimen, so `specimen_no` should equal 1 (`==`).
 For the second join you want to keep every infant, so use `left_join()`.
 :::
 
 ::: {.solution exercise="ex_join"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_join
 #| solution: true
@@ -589,7 +597,6 @@ nrow(analysis) == nrow(births)
 ```
 :::
 
----
 
 # Dates, missingness, shape {.section-break}
 
@@ -640,14 +647,16 @@ timing |> group_by(specimen_no) |>
 
 ::: {.rs .smaller}
 <div class="r-side">
-#### R
+<h4>R</h4>
+
 ```r
 as_date(x); year(x); month(x, label = TRUE)
 difftime(b, a, units = "hours")
 ```
 </div>
 <div class="sas-side">
-#### SAS
+<h4>SAS</h4>
+
 ```sas
 dob = DATEPART(birth_dtm);
 FORMAT dob date9.;
@@ -733,7 +742,6 @@ with formatting, p-values, and export to Word — in two lines. Try it locally:
 `install.packages("gtsummary")`.
 :::
 
----
 
 # Visualisation {.section-break}
 
@@ -816,12 +824,14 @@ analysis |>
 ```
 
 ::: {.hint exercise="ex_plot"}
-#### Hint
+<h4>Hint</h4>
+
 The function that splits a plot into panels by one variable is `facet_wrap()`.
 :::
 
 ::: {.solution exercise="ex_plot"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_plot
 #| solution: true
@@ -835,7 +845,6 @@ analysis |>
 ```
 :::
 
----
 
 # Modelling {.section-break}
 
@@ -886,11 +895,10 @@ are just another ggplot.</p>
 </div>
 :::
 
----
 
 # AI coding assistants {.section-break background-color="#8b1d41"}
 
-## What we're talking about {.time}15 min{.smaller}
+## What we're talking about [15 min]{.time} {.smaller}
 
 | | Examples | Where it lives |
 |---|---|---|
@@ -1032,7 +1040,7 @@ summer student who has never once said "I'm not sure".
 
 ---
 
-## Live exercise: spot the bugs {.time}8 min{.smaller}
+## Live exercise: spot the bugs [8 min]{.time} {.smaller}
 
 I asked an assistant for "the analysis of preterm birth". It produced this. **It runs.**
 There are **four** things wrong with it. Find them, then fix them.
@@ -1058,7 +1066,8 @@ tidy(m, exponentiate = TRUE)
 ```
 
 ::: {.hint exercise="ex_bug"}
-#### Hint
+<h4>Hint</h4>
+
 1. Compare `nrow(cohort)` with `nrow(births)`. Which join changed the row count, and why?
 2. Look at `mean_17ohp`. Why is it `NA`?
 3. Look at the output of `count(cohort, sex)`. How many sexes are there?
@@ -1067,7 +1076,8 @@ tidy(m, exponentiate = TRUE)
 :::
 
 ::: {.solution exercise="ex_bug"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_bug
 #| solution: true
@@ -1121,7 +1131,6 @@ answer is wrong** — and that still comes from understanding your data and your
 That is what this degree is for.
 :::
 
----
 
 # Wrap-up {.section-break}
 

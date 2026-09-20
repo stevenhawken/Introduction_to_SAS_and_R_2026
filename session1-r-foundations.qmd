@@ -26,14 +26,14 @@ resources:
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
+## Before we start {.smaller}
+
 ```{webr}
 #| include: false
 #| autorun: true
 # Silent pre-warm: starts downloading R-in-the-browser while we do introductions.
 invisible(1)
 ```
-
-## Before we start {.smaller}
 
 ::: {.keypoint}
 **Everything in this deck runs.** There is nothing to install today.
@@ -78,7 +78,6 @@ After that it is instant. It should already be loading in the background.</p>
 **Homework for next week:** install R + RStudio (last slide). Session 2 assumes you have them.
 :::
 
----
 
 # Why write code at all? {.section-break}
 
@@ -130,7 +129,6 @@ You do not have to choose. You have to be **literate in SAS** and **fluent in R*
 That is exactly the split of these two sessions.
 :::
 
----
 
 # R's building blocks {.section-break}
 
@@ -249,13 +247,15 @@ sum(bw ______ 2500)
 ```
 
 ::: {.hint exercise="ex_vec"}
-#### Hint
+<h4>Hint</h4>
+
 `mean()` takes the vector itself. To convert grams to kilograms, divide by 1000.
 For the count, you want the comparison operator "less than".
 :::
 
 ::: {.solution exercise="ex_vec"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_vec
 #| solution: true
@@ -353,7 +353,6 @@ skip <b>Details</b> until you need it.</p>
 </div>
 :::
 
----
 
 # Rectangular data {.section-break}
 
@@ -424,13 +423,15 @@ clinic
 ```
 
 ::: {.hint exercise="ex_df"}
-#### Hint
+<h4>Hint</h4>
+
 `clinic$bw_g / 1000` gives kilograms. For the flag you need a comparison that
 returns `TRUE` when the weight is below 2500.
 :::
 
 ::: {.solution exercise="ex_df"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_df
 #| solution: true
@@ -510,14 +511,16 @@ mean(births$birth_weight_g[______])
 ```
 
 ::: {.hint exercise="ex_read"}
-#### Hint
+<h4>Hint</h4>
+
 `births$ga_weeks < 37` gives you a logical vector. `sum()` counts the `TRUE`s;
 `mean()` of the same vector gives the proportion. Square brackets `[ ]` subset a
 vector using a logical condition.
 :::
 
 ::: {.solution exercise="ex_read"}
-#### Solution
+<h4>Solution</h4>
+
 ```{webr}
 #| exercise: ex_read
 #| solution: true
@@ -552,7 +555,6 @@ Base graphics are fine for a quick look. Next week we switch to `ggplot2`, which
 what you'll use for anything going into a manuscript.
 :::
 
----
 
 # Packages and the working environment {.section-break}
 
@@ -667,11 +669,10 @@ Number 6 gets a full segment next week. Short version for today: it will confide
 invent a function that does not exist, and it must never see patient data.
 :::
 
----
 
 # A working tour of SAS {.section-break background-color="#8b1d41"}
 
-## Why you still need SAS {.time}15 min{.smaller}
+## Why you still need SAS [15 min]{.time} {.smaller}
 
 ::: {.incremental}
 - **ICES, ICES-uOttawa, TOHDW, CIHI, BORN, StatCan RDCs** all run on it. Large linked
@@ -775,14 +776,16 @@ RUN;
 
 ::: {.rs}
 <div class="r-side">
-#### R equivalent
+<h4>R equivalent</h4>
+
 ```r
 births        # lives in memory only
 saveRDS(births, "data/births.rds")
 ```
 </div>
 <div class="sas-side">
-#### The mental model
+<h4>The mental model</h4>
+
 `WORK.` = R's environment.
 `LIBNAME` = a folder on disk.
 Two-level name = `library.dataset`.
@@ -952,7 +955,6 @@ something is. Tape it to your monitor.</p>
 </div>
 :::
 
----
 
 # Wrap-up {.section-break}
 

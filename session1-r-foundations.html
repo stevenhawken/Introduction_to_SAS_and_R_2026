@@ -6,13 +6,13 @@
 <script src="session1-r-foundations_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="session1-r-foundations_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="session1-r-foundations_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="session1-r-foundations_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="session1-r-foundations_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="session1-r-foundations_files/libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="session1-r-foundations_files/libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of Ottawa">
-  <meta name="dcterms.date" content="2026-09-17">
+  <meta name="dcterms.date" content="2026-09-20">
   <title>Getting Started with R</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="session1-r-foundations_files/libs/revealjs/dist/theme/quarto-259cdd070b361f9c239ea10f3b613d1b.css">
+  <link rel="stylesheet" href="session1-r-foundations_files/libs/revealjs/dist/theme/quarto-7f77ef90c2effe985d978e2d7c5c5c44.css">
   <link href="session1-r-foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="session1-r-foundations_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="session1-r-foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -210,10 +210,10 @@ Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of
 </div>
 </div>
 
-  <p class="date">17 September 2026</p>
+  <p class="date">20 September 2026</p>
 </section>
-<section class="slide level2">
-
+<section id="before-we-start" class="slide level2 smaller">
+<h2>Before we start</h2>
 <div class="cell" data-autorun="true">
 <div>
 <div id="webr-1" class="exercise-cell">
@@ -224,9 +224,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1
 </script>
 </div>
 </div>
-</section>
-<section id="before-we-start" class="slide level2 smaller">
-<h2>Before we start</h2>
 <div class="keypoint">
 <p><strong>Everything in this deck runs.</strong> There is nothing to install today. Every grey box with a <strong>Run Code</strong> button is a real R session running <em>inside your browser</em>.</p>
 </div>
@@ -273,9 +270,6 @@ The first time you click Run it takes ~15 seconds to load R. After that it is in
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section>
 <section>
 <section id="why-write-code-at-all" class="title-slide slide level1 section-break center">
@@ -356,9 +350,6 @@ The first time you click Run it takes ~15 seconds to load R. After that it is in
 <p>You do not have to choose. You have to be <strong>literate in SAS</strong> and <strong>fluent in R</strong>. That is exactly the split of these two sessions.</p>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="rs-building-blocks" class="title-slide slide level1 section-break center">
@@ -462,11 +453,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_vec">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_vec">
+<h4>
+Hint
+</h4>
 <p><code>mean()</code> takes the vector itself. To convert grams to kilograms, divide by 1000. For the count, you want the comparison operator “less than”.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_vec">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_vec" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_vec">
 <code id="interpolate-8" class="solution-code d-none">bw &lt;- c(3250, 2410, 4100, 1980, 3600)
@@ -549,9 +545,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 Help pages are terse but complete. Read the <b>Arguments</b> and <b>Examples</b> sections first; skip <b>Details</b> until you need it.
 </p>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="rectangular-data" class="title-slide slide level1 section-break center">
@@ -602,11 +595,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-1" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_df">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_df">
+<h4>
+Hint
+</h4>
 <p><code>clinic$bw_g / 1000</code> gives kilograms. For the flag you need a comparison that returns <code>TRUE</code> when the weight is below 2500.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_df">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_df" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_df">
 <code id="interpolate-17" class="solution-code d-none">clinic &lt;- data.frame(
@@ -684,11 +682,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-2" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_read">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_read">
+<h4>
+Hint
+</h4>
 <p><code>births$ga_weeks &lt; 37</code> gives you a logical vector. <code>sum()</code> counts the <code>TRUE</code>s; <code>mean()</code> of the same vector gives the proportion. Square brackets <code>[ ]</code> subset a vector using a logical condition.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_read">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_read" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_read">
 <code id="interpolate-23" class="solution-code d-none">births &lt;- read.csv("data/births.csv")
@@ -724,9 +727,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQi
 <div class="small muted">
 <p>Base graphics are fine for a quick look. Next week we switch to <code>ggplot2</code>, which is what you’ll use for anything going into a manuscript.</p>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="packages-and-the-working-environment" class="title-slide slide level1 section-break center">
@@ -831,17 +831,14 @@ This runs on exactly one computer, until you reorganise your Desktop. It is the 
 <p>Number 6 gets a full segment next week. Short version for today: it will confidently invent a function that does not exist, and it must never see patient data.</p>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="a-working-tour-of-sas" class="title-slide slide level1 section-break center" data-background-color="#8b1d41">
 <h1>A working tour of SAS</h1>
 
 </section>
-<section id="why-you-still-need-sas-.time15-min" class="slide level2 smaller">
-<h2>Why you still need SAS {.time}15 min</h2>
+<section id="why-you-still-need-sas-15-min" class="slide level2 smaller">
+<h2>Why you still need SAS <span class="time">15 min</span></h2>
 <ul>
 <li class="fragment"><strong>ICES, ICES-uOttawa, TOHDW, CIHI, BORN, StatCan RDCs</strong> all run on it. Large linked administrative holdings, decades of validated code, and analysts who know it cold.</li>
 <li class="fragment">It handles data <strong>larger than memory</strong> without you thinking about it — R will fall over on a 40-million-row OHIP claims extract where SAS shrugs.</li>
@@ -911,15 +908,19 @@ I will demo in OnDemand now. The <code>.sas</code> files for this seminar are in
 <span id="cb7-10"><a href=""></a>  SET births;</span>
 <span id="cb7-11"><a href=""></a>RUN;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="rs">
-<section id="r-equivalent" class="r-side">
-<h4>R equivalent</h4>
+<div class="r-side">
+<h4>
+R equivalent
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>births        <span class="co"># lives in memory only</span></span>
 <span id="cb8-2"><a href=""></a><span class="fu">saveRDS</span>(births, <span class="st">"data/births.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="the-mental-model" class="sas-side">
-<h4>The mental model</h4>
+</div>
+<div class="sas-side">
+<h4>
+The mental model
+</h4>
 <p><code>WORK.</code> = R’s environment. <code>LIBNAME</code> = a folder on disk. Two-level name = <code>library.dataset</code>.</p>
-</section>
+</div>
 </div>
 </section>
 <section id="demo-1-make-a-dataset-and-look-at-it" class="slide level2 smaller">
@@ -1115,9 +1116,6 @@ Record what each version gave you. Reviewers ask.
 If a stray quote makes SAS unresponsive, run that line (sometimes twice). Harmless if nothing is wrong; saves you a restart if something is. Tape it to your monitor.
 </p>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="wrap-up" class="title-slide slide level1 section-break center">
@@ -1196,7 +1194,7 @@ eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yNSIsImlubGluZSI6ZmFsc2UsIm1l
 </div>
 </div>
 <script type="vfs-file">
-WyJkYXRhL21vdGhlcnMuY3N2IiwiZGF0YS9wYXRpZW50cy5jc3YiLCJkYXRhL3NjcmVlbmluZy5jc3YiLCJkYXRhL2JpcnRocy5jc3YiXQ==
+WyJkYXRhL21vdGhlcnMuY3N2IiwiZGF0YS9zY3JlZW5pbmcuY3N2IiwiZGF0YS9wYXRpZW50cy5jc3YiLCJkYXRhL2JpcnRocy5jc3YiXQ==
 </script>
 </div>
 </section></section>

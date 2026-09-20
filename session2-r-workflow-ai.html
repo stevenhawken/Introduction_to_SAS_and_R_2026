@@ -6,13 +6,13 @@
 <script src="session2-r-workflow-ai_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="session2-r-workflow-ai_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="session2-r-workflow-ai_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="session2-r-workflow-ai_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="session2-r-workflow-ai_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="session2-r-workflow-ai_files/libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="session2-r-workflow-ai_files/libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of Ottawa">
-  <meta name="dcterms.date" content="2026-09-17">
+  <meta name="dcterms.date" content="2026-09-20">
   <title>A Real Analysis in R</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="session2-r-workflow-ai_files/libs/revealjs/dist/theme/quarto-259cdd070b361f9c239ea10f3b613d1b.css">
+  <link rel="stylesheet" href="session2-r-workflow-ai_files/libs/revealjs/dist/theme/quarto-7f77ef90c2effe985d978e2d7c5c5c44.css">
   <link href="session2-r-workflow-ai_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="session2-r-workflow-ai_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="session2-r-workflow-ai_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -210,10 +210,10 @@ Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of
 </div>
 </div>
 
-  <p class="date">17 September 2026</p>
+  <p class="date">20 September 2026</p>
 </section>
-<section class="slide level2">
-
+<section id="today" class="slide level2 smaller">
+<h2>Today</h2>
 <div class="cell" data-autorun="true">
 <div>
 <div id="webr-1" class="exercise-cell">
@@ -224,9 +224,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1
 </script>
 </div>
 </div>
-</section>
-<section id="today" class="slide level2 smaller">
-<h2>Today</h2>
 <div class="cols">
 <h3 id="part-1-the-workflow-40-min">Part 1 — the workflow <span class="muted">(~40 min)</span></h3>
 <ul>
@@ -308,9 +305,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1
 1,239 infants but only 1,200 mothers, and 1,338 specimens for 1,239 infants. Those two mismatches are the whole lesson of the joins section. Fully synthetic data — safe to share, safe to paste anywhere.
 </p>
 </div>
-</section>
-<section class="slide level2">
-
 </section>
 <section>
 <section id="the-workflow" class="title-slide slide level1 section-break center">
@@ -445,16 +439,20 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 </div>
 </div>
 <div class="rs smaller">
-<section id="r" class="r-side">
-<h4>R</h4>
+<div class="r-side">
+<h4>
+R
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">filter</span>(ga_weeks <span class="sc">&lt;</span> <span class="dv">37</span>)</span>
 <span id="cb4-2"><a href=""></a><span class="fu">select</span>(id, ga_weeks)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="sas" class="sas-side">
-<h4>SAS</h4>
+</div>
+<div class="sas-side">
+<h4>
+SAS
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a href=""></a>IF ga_weeks &lt; 37;</span>
 <span id="cb5-2"><a href=""></a>KEEP id ga_weeks;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+</div>
 </div>
 </section>
 <section id="verb-3-mutate-deriving-variables" class="slide level2 smaller">
@@ -495,11 +493,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_mutate">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_mutate">
+<h4>
+Hint
+</h4>
 <p>The conventional low-birth-weight cut-point is 2500 g. To tabulate a variable in <code>dplyr</code>, the verb is <code>count()</code>.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_mutate">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_mutate" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_mutate">
 <code id="interpolate-8" class="solution-code d-none">births |&gt;
@@ -554,11 +557,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-1" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_group">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_group">
+<h4>
+Hint
+</h4>
 <p>The grouping verb is <code>group_by()</code>. <code>n()</code> counts rows in the current group (no arguments). <code>sd()</code> is the standard deviation.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_group">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_group" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_group">
 <code id="interpolate-13" class="solution-code d-none">births |&gt;
@@ -580,9 +588,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="joins" class="title-slide slide level1 section-break center" data-background-color="#8b1d41">
@@ -614,19 +619,23 @@ Rows of a with <b>no</b> match in b. <b>An auditing tool</b> — “who is missi
 </div>
 </div>
 <div class="rs smaller">
-<section id="r-1" class="r-side">
-<h4>R</h4>
+<div class="r-side">
+<h4>
+R
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">left_join</span>(births, mothers, <span class="at">by =</span> <span class="st">"momid"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="sas-1" class="sas-side">
-<h4>SAS</h4>
+</div>
+<div class="sas-side">
+<h4>
+SAS
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb11-1"><a href=""></a>DATA out; MERGE births(IN=a) mothers;</span>
 <span id="cb11-2"><a href=""></a>  BY momid; IF a; RUN;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+</div>
 </div>
 </section>
-<section id="the-join-that-ruins-analyses-.timelive" class="slide level2 smaller">
-<h2>The join that ruins analyses {.time}live</h2>
+<section id="the-join-that-ruins-analyses-live" class="slide level2 smaller">
+<h2>The join that ruins analyses <span class="time">live</span></h2>
 <div class="cell" data-autorun="true" data-min-lines="7">
 <div>
 <div id="webr-15" class="exercise-cell">
@@ -719,11 +728,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-2" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_join">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_join">
+<h4>
+Hint
+</h4>
 <p>You want only the <em>first</em> specimen, so <code>specimen_no</code> should equal 1 (<code>==</code>). For the second join you want to keep every infant, so use <code>left_join()</code>.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_join">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_join" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_join">
 <code id="interpolate-21" class="solution-code d-none">analysis &lt;- births |&gt;
@@ -743,9 +757,6 @@ nrow(analysis) == nrow(births)</code>
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="dates-missingness-shape" class="title-slide slide level1 section-break center">
@@ -790,17 +801,21 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 </div>
 </div>
 <div class="rs smaller">
-<section id="r-2" class="r-side">
-<h4>R</h4>
+<div class="r-side">
+<h4>
+R
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">as_date</span>(x); <span class="fu">year</span>(x); <span class="fu">month</span>(x, <span class="at">label =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb12-2"><a href=""></a><span class="fu">difftime</span>(b, a, <span class="at">units =</span> <span class="st">"hours"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="sas-2" class="sas-side">
-<h4>SAS</h4>
+</div>
+<div class="sas-side">
+<h4>
+SAS
+</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"><a href=""></a>dob = DATEPART(birth_dtm);</span>
 <span id="cb13-2"><a href=""></a>FORMAT dob date9.;</span>
 <span id="cb13-3"><a href=""></a>hrs = INTCK('hour', birth_dtm, coll_dtm);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+</div>
 </div>
 </section>
 <section id="missing-data-think-then-act" class="slide level2 smaller">
@@ -860,9 +875,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="visualisation" class="title-slide slide level1 section-break center">
@@ -925,11 +937,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-3" class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_plot">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_plot">
+<h4>
+Hint
+</h4>
 <p>The function that splits a plot into panels by one variable is <code>facet_wrap()</code>.</p>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_plot">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_plot" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_plot">
 <code id="interpolate-33" class="solution-code d-none">analysis |&gt;
@@ -949,9 +966,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </div>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="modelling" class="title-slide slide level1 section-break center">
@@ -1022,17 +1036,14 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 </table>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="ai-coding-assistants" class="title-slide slide level1 section-break center" data-background-color="#8b1d41">
 <h1>AI coding assistants</h1>
 
 </section>
-<section id="what-were-talking-about-.time15-min" class="slide level2 smaller">
-<h2>What we’re talking about {.time}15 min</h2>
+<section id="what-were-talking-about-15-min" class="slide level2 smaller">
+<h2>What we’re talking about <span class="time">15 min</span></h2>
 <table class="caption-top">
 <colgroup>
 <col style="width: 24%">
@@ -1176,8 +1187,8 @@ Write and debug against simulated data that has the same structure (exactly like
 </div>
 </div>
 </section>
-<section id="live-exercise-spot-the-bugs-.time8-min" class="slide level2 smaller">
-<h2>Live exercise: spot the bugs {.time}8 min</h2>
+<section id="live-exercise-spot-the-bugs-8-min" class="slide level2 smaller scrollable">
+<h2>Live exercise: spot the bugs <span class="time">8 min</span></h2>
 <p>I asked an assistant for “the analysis of preterm birth”. It produced this. <strong>It runs.</strong> There are <strong>four</strong> things wrong with it. Find them, then fix them.</p>
 <div class="cell" data-exercise="ex_bug" data-min-lines="14">
 <div>
@@ -1189,16 +1200,21 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlLCJleGVyY2lzZSI6
 </script>
 </div>
 </div>
-<section id="hint-4" class="hint webr-ojs-exercise exercise-hint d-none scrollable" data-exercise="ex_bug">
-<h4>Hint</h4>
+<div class="hint webr-ojs-exercise exercise-hint d-none" data-exercise="ex_bug">
+<h4>
+Hint
+</h4>
 <ol type="1">
 <li>Compare <code>nrow(cohort)</code> with <code>nrow(births)</code>. Which join changed the row count, and why?</li>
 <li>Look at <code>mean_17ohp</code>. Why is it <code>NA</code>?</li>
 <li>Look at the output of <code>count(cohort, sex)</code>. How many sexes are there?</li>
 <li><code>ga_weeks &lt; 37</code> is TRUE/FALSE. Is <code>gaussian</code> the right family for that — and does <code>exponentiate = TRUE</code> mean anything if it isn’t?</li>
 </ol>
-</section>
+</div>
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_bug">
+<h4>
+Solution
+</h4>
 <div class="cell" data-exercise="ex_bug" data-solution="true">
 <div class="webr-ojs-exercise exercise-solution d-none" data-exercise="ex_bug">
 <code id="interpolate-38" class="solution-code d-none"># 1. Keep ONE screening record per infant, or the cohort inflates 1239 -&gt; 1372
@@ -1272,9 +1288,6 @@ tidy(m, exponentiate = TRUE, conf.int = TRUE)
 <p>The skill that matters is no longer typing <code>ggplot</code> from memory. It is <strong>knowing when the answer is wrong</strong> — and that still comes from understanding your data and your methods. That is what this degree is for.</p>
 </div>
 </div>
-</section>
-<section class="slide level2">
-
 </section></section>
 <section>
 <section id="wrap-up" class="title-slide slide level1 section-break center">
@@ -1358,7 +1371,7 @@ eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zNiIsImlubGluZSI6ZmFsc2UsIm1l
 </div>
 </div>
 <script type="vfs-file">
-WyJkYXRhL21vdGhlcnMuY3N2IiwiZGF0YS9wYXRpZW50cy5jc3YiLCJkYXRhL3NjcmVlbmluZy5jc3YiLCJkYXRhL2JpcnRocy5jc3YiXQ==
+WyJkYXRhL21vdGhlcnMuY3N2IiwiZGF0YS9zY3JlZW5pbmcuY3N2IiwiZGF0YS9wYXRpZW50cy5jc3YiLCJkYXRhL2JpcnRocy5jc3YiXQ==
 </script>
 </div>
 </section></section>
