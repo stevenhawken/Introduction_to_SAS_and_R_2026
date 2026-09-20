@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro to R &amp; SAS — MSc Epidemiology Grad Seminar</title>
+<style>
+  :root {
+    --garnet: #8b1d41;
+    --garnet-soft: #a8476a;
+    --slate: #21303b;
+    --slate-mid: #4a5b68;
+    --paper: #fdfdfb;
+    --card: #ffffff;
+    --rule: #dfe3e6;
+    --teal: #12707a;
+    --amber: #a86a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --garnet: #e08aa6;
+      --garnet-soft: #c96f8f;
+      --slate: #e6ebef;
+      --slate-mid: #a8b6c0;
+      --paper: #161e24;
+      --card: #1d272e;
+      --rule: #32414c;
+      --teal: #5fc3cb;
+      --amber: #d9a441;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0 16px 64px;
+    background: var(--paper);
+    color: var(--slate);
+    font-family: "Source Sans Pro", "Lato", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  header { padding: 56px 0 28px; border-bottom: 3px solid var(--garnet); margin-bottom: 32px; }
+  h1 { font-size: 2rem; font-weight: 650; letter-spacing: -0.01em; color: var(--garnet); margin: 0 0 8px; }
+  .sub { color: var(--slate-mid); font-size: 1.05rem; margin: 0; }
+  h2 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--slate-mid); font-weight: 650; margin: 40px 0 14px; }
+  a.card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--garnet);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+  a.card:hover { border-left-color: var(--teal); box-shadow: 0 2px 10px rgba(0,0,0,.07); transform: translateY(-1px); }
+  a.card.alt { border-left-color: var(--teal); }
+  a.card.alt:hover { border-left-color: var(--garnet); }
+  .kicker { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--slate-mid); font-weight: 650; }
+  .title { font-size: 1.22rem; font-weight: 650; color: var(--garnet); margin: 3px 0 5px; }
+  a.card.alt .title { color: var(--teal); }
+  .desc { font-size: 0.95rem; color: var(--slate-mid); margin: 0; }
+  .note {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    color: var(--slate-mid);
+  }
+  .note strong { color: var(--slate); }
+  .note code { color: var(--garnet); font-size: 0.9em; }
+  ul.plain { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.plain li { margin-bottom: 6px; font-size: 0.95rem; }
+  ul.plain a { color: var(--teal); }
+  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 0.85rem; color: var(--slate-mid); }
+  footer a { color: var(--teal); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Introduction to R &amp; SAS</h1>
+  <p class="sub">A two-part graduate seminar &middot; MSc Epidemiology, University of Ottawa</p>
+</header>
+
+<h2>Slides</h2>
+
+<a class="card" href="session1-r-foundations.html">
+  <div class="kicker">Session 1</div>
+  <div class="title">Getting Started with R</div>
+  <p class="desc">Why code, the building blocks of R, data frames, packages and RStudio — plus a short tour of SAS. Every code box runs live in your browser.</p>
+</a>
+
+<a class="card" href="session2-r-workflow-ai.html">
+  <div class="kicker">Session 2</div>
+  <div class="title">A Real Analysis in R</div>
+  <p class="desc">A complete workflow: import, join, summarise, plot and model — and where AI coding assistants help, and where they quietly mislead you.</p>
+</a>
+
+<h2>Work along</h2>
+
+<a class="card alt" href="session2-workbook.html">
+  <div class="kicker">Companion workbook</div>
+  <div class="title">Session 2 Workbook</div>
+  <p class="desc">Fill-in-the-blank exercises for students running R and RStudio locally. Read it here, or grab the <code>.Rmd</code> from the repository to knit yourself.</p>
+</a>
+
+<div class="note">
+  <strong>Nothing to install for the slides.</strong> The code boxes run a real R session inside your browser, so you can edit and re-run anything during the talk. Navigate with the arrow keys; press <code>?</code> for shortcuts, <code>F</code> for fullscreen, <code>E</code> to print to PDF.
+  <ul class="plain">
+    <li><a href="https://github.com/stevenhawken/Introduction_to_SAS_and_R_2026">Source, data and SAS demos on GitHub</a></li>
+    <li><a href="https://github.com/stevenhawken/Introduction_to_SAS_and_R_2026/archive/refs/heads/main.zip">Download everything as a .zip</a></li>
+  </ul>
+</div>
+
+<footer>
+  Steven Hawken &middot; School of Epidemiology and Public Health, University of Ottawa
+</footer>
+
+</div>
+</body>
+</html>
