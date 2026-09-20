@@ -1,0 +1,411 @@
+---
+title: "Session 2 Workbook — A Real Analysis in R"
+subtitle: "MSc Epidemiology · Intro to R & SAS"
+author: "Your name here"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.width = 7.5, fig.height = 4.2, dpi = 110
+)
+```
+
+# How to use this workbook
+
+Open this file in RStudio **inside the seminar RStudio Project**, so that the `data/`
+folder sits beside it. Then:
+
+* Run one chunk at a time with the green ▶ button, or <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd>
+* Work through the `## YOUR TURN` chunks — they are deliberately incomplete
+* **Knit** the whole thing at the end (the Knit button) to prove it runs top to bottom
+
+If knitting fails but the chunks all ran, you have an ordering problem: something
+later depends on an object you created out of sequence. That is exactly the bug
+that reproducibility checks are meant to catch, and it is worth fixing.
+
+```{r packages}
+# install.packages(c("tidyverse", "broom", "janitor", "gtsummary"))  # once, if needed
+library(tidyverse)
+library(broom)
+```
+
+---
+
+# 1 · Import and first look
+
+```{r import}
+births    <- read_csv("data/births.csv",    show_col_types = FALSE)
+mothers   <- read_csv("data/mothers.csv",   show_col_types = FALSE)
+screening <- read_csv("data/screening.csv", show_col_types = FALSE)
+
+dim(births); dim(mothers); dim(screening)
+```
+
+```{r glimpse}
+glimpse(births)
+```
+
+Three things are already wrong with this data. Find them:
+
+```{r first-look}
+count(births, sex)                  # 1. ?
+colSums(is.na(mothers))             # 2. ?
+c(rows = nrow(screening), infants = n_distinct(screening$infant_id))   # 3. ?
+```
+
+> **1.** `sex` is coded four ways (`F`, `M`, `f`, `m`).
+> **2.** `mat_bmi` has missing values.
+> **3.** Some infants have more than one screening specimen.
+
+## YOUR TURN
+
+How many births are preterm (`ga_weeks < 37`), and what percentage is that?
+
+```{r yt-1}
+# sum(...)
+# 100 * mean(...)
+```
+
+---
+
+# 2 · Clean and derive
+
+```{r clean}
+births_clean <- births |>
+  mutate(
+    sex      = toupper(sex),
+    bw_kg    = birth_weight_g / 1000,
+    preterm  = ga_weeks < 37,
+    ga_group = factor(
+      case_when(
+        ga_weeks < 32 ~ "very preterm",
+        ga_weeks < 37 ~ "preterm",
+        ga_weeks < 42 ~ "term",
+        .default      = "post-term"
+      ),
+      levels = c("term", "preterm", "very preterm", "post-term")
+    )
+  )
+
+count(births_clean, ga_group)
+count(births_clean, sex)
+```
+
+`janitor::clean_names()` does the equivalent tidying for *variable names* — useful when
+data arrives from Excel with names like `Birth Weight (g)`:
+
+```{r janitor, eval=FALSE}
+births |> janitor::clean_names() |> names()
+```
+
+## YOUR TURN
+
+Create `bw_cat` with levels `very low` (<1500 g), `low` (<2500 g) and `normal`,
+then cross-tabulate it against `ga_group`.
+
+```{r yt-2}
+# births_clean |>
+#   mutate(bw_cat = case_when(...)) |>
+#   count(ga_group, bw_cat)
+```
+
+---
+
+# 3 · The join that ruins analyses
+
+This is the single most important section of the workshop.
+
+```{r bad-join}
+naive <- left_join(births_clean, screening, by = "infant_id")
+
+c(births = nrow(births_clean), naive_join = nrow(naive))
+```
+
+The row count changed. Find out why:
+
+```{r why}
+naive |> count(infant_id) |> filter(n > 1) |> nrow()
+```
+
+Now do it properly — one screening record per infant:
+
+```{r good-join}
+first_spec <- screening |> filter(specimen_no == 1)
+
+analysis <- births_clean |>
+  left_join(first_spec, by = "infant_id") |>
+  left_join(mothers,    by = "momid")
+
+stopifnot(nrow(analysis) == nrow(births_clean))   # fail loudly if not
+nrow(analysis)
+```
+
+`stopifnot()` is a **guard rail**. Put one after every join. If a future version of the
+data breaks your assumption, the script stops instead of quietly producing a different answer.
+
+Audit who didn't link:
+
+```{r audit}
+unscreened <- anti_join(births_clean, screening, by = "infant_id")
+nrow(unscreened)
+
+bind_rows(
+  unscreened |> mutate(grp = "no screen"),
+  semi_join(births_clean, screening, by = "infant_id") |> mutate(grp = "screened")
+) |>
+  group_by(grp) |>
+  summarise(n = n(),
+            mean_ga = mean(ga_weeks),
+            mean_bw = mean(birth_weight_g),
+            .groups = "drop")
+```
+
+## YOUR TURN
+
+Are the unscreened infants different in a way that would bias a complete-case analysis?
+Write one or two sentences below, as you would in a Limitations paragraph.
+
+> *Your answer here.*
+
+---
+
+# 4 · Summarise
+
+```{r summarise}
+analysis |>
+  group_by(site, sex) |>
+  summarise(
+    n           = n(),
+    mean_bw     = mean(birth_weight_g),
+    sd_bw       = sd(birth_weight_g),
+    pct_preterm = 100 * mean(preterm),
+    .groups     = "drop"
+  ) |>
+  arrange(desc(n))
+```
+
+## YOUR TURN
+
+Median and IQR of `x17ohp` by `ga_group`, with the number of non-missing values in each group.
+Remember `na.rm = TRUE`.
+
+```{r yt-3}
+# analysis |>
+#   group_by(ga_group) |>
+#   summarise(n = sum(!is.na(x17ohp)),
+#             median = ...,
+#             q1 = quantile(..., 0.25, na.rm = TRUE),
+#             q3 = ...)
+```
+
+---
+
+# 5 · Dates
+
+```{r dates}
+timing <- analysis |>
+  mutate(
+    birth_date  = as_date(birth_datetime),
+    birth_month = month(birth_datetime, label = TRUE),
+    hours_to_collection = as.numeric(
+      difftime(collection_datetime, birth_datetime, units = "hours")
+    )
+  )
+
+timing |>
+  summarise(
+    median_h = median(hours_to_collection, na.rm = TRUE),
+    n_before_24h = sum(hours_to_collection < 24, na.rm = TRUE)
+  )
+```
+
+---
+
+# 6 · Missing data
+
+```{r missing}
+analysis |>
+  summarise(across(everything(), ~ sum(is.na(.x)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "n_missing") |>
+  filter(n_missing > 0) |>
+  arrange(desc(n_missing))
+```
+
+`drop_na()` is one keystroke and a substantive assumption (MCAR). For anything going into
+a manuscript, look at `mice::mice()` for multiple imputation.
+
+---
+
+# 7 · Table 1
+
+Hand-rolled, so you can see what it is doing:
+
+```{r table1-manual}
+analysis |>
+  mutate(preterm_lab = if_else(preterm, "Preterm (<37 wk)", "Term")) |>
+  group_by(preterm_lab) |>
+  summarise(
+    n             = n(),
+    mat_age       = sprintf("%.1f (%.1f)", mean(mat_age), sd(mat_age)),
+    mat_bmi       = sprintf("%.1f (%.1f)", mean(mat_bmi, na.rm = TRUE), sd(mat_bmi, na.rm = TRUE)),
+    smoking_pct   = sprintf("%.1f", 100 * mean(smoking == "yes")),
+    hypertens_pct = sprintf("%.1f", 100 * mean(hypertension)),
+    birthwt       = sprintf("%.0f (%.0f)", mean(birth_weight_g), sd(birth_weight_g)),
+    .groups = "drop"
+  )
+```
+
+And the two-line version you will actually use. `gtsummary` exports cleanly to Word:
+
+```{r table1-gtsummary, eval=FALSE}
+library(gtsummary)
+
+analysis |>
+  select(preterm, mat_age, mat_bmi, smoking, hypertension, diabetes_pre,
+         birth_weight_g, sex, delivery_mode) |>
+  tbl_summary(by = preterm, missing_text = "Missing") |>
+  add_p() |>
+  add_overall() |>
+  bold_labels()
+```
+
+---
+
+# 8 · Figures
+
+```{r fig-hist}
+ggplot(analysis, aes(ga_weeks)) +
+  geom_histogram(binwidth = 0.5, fill = "#8b1d41", colour = "white") +
+  geom_vline(xintercept = 37, linetype = "dashed", colour = "#12707a", linewidth = 0.9) +
+  labs(x = "Gestational age (completed weeks)", y = "Infants",
+       title = "Gestational age at birth") +
+  theme_minimal(base_size = 13)
+```
+
+```{r fig-analyte}
+analysis |>
+  filter(!is.na(x17ohp)) |>
+  ggplot(aes(ga_weeks, x17ohp)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "loess", colour = "#8b1d41") +
+  scale_y_log10() +
+  labs(x = "Gestational age (weeks)", y = "17-OHP (nmol/L, log scale)",
+       title = "17-OHP falls steeply with increasing gestational age") +
+  theme_minimal(base_size = 13)
+```
+
+## YOUR TURN
+
+Birth weight against gestational age, coloured by `sex`, with a linear smooth,
+faceted by `site`. Give it publication-ready axis labels.
+
+```{r yt-4}
+# ggplot(analysis, aes(...)) + ...
+```
+
+---
+
+# 9 · Models
+
+```{r models}
+m_bw <- lm(birth_weight_g ~ ga_weeks + sex + smoking + mat_age, data = analysis)
+tidy(m_bw, conf.int = TRUE) |> mutate(across(where(is.numeric), \(x) round(x, 2)))
+glance(m_bw) |> select(r.squared, adj.r.squared, sigma, nobs)
+
+m_pt <- glm(preterm ~ mat_age + smoking + hypertension + diabetes_pre,
+            data = analysis, family = binomial)
+tidy(m_pt, exponentiate = TRUE, conf.int = TRUE) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+A forest plot straight from `tidy()` output — this is why `broom` matters:
+
+```{r forest}
+tidy(m_pt, exponentiate = TRUE, conf.int = TRUE) |>
+  filter(term != "(Intercept)") |>
+  ggplot(aes(estimate, fct_rev(factor(term)))) +
+  geom_vline(xintercept = 1, linetype = "dashed", colour = "grey50") +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high)) +
+  scale_x_log10() +
+  labs(x = "Odds ratio (95% CI)", y = NULL, title = "Predictors of preterm birth") +
+  theme_minimal(base_size = 13)
+```
+
+## YOUR TURN — think like an epidemiologist, not a programmer
+
+Twins share a mother, so rows in `analysis` are **not independent**.
+
+1. How many mothers contribute more than one infant?
+2. Why does that matter for the standard errors in `m_pt`?
+3. What would you do about it?
+
+```{r yt-5}
+# analysis |> count(momid) |> filter(n > 1) |> nrow()
+```
+
+> *Your answer here.* (Hint: cluster-robust variance, e.g. `sandwich` + `lmtest`,
+> or a random intercept for `momid` with `lme4::glmer()`.)
+
+---
+
+# 10 · Spot the bugs
+
+An AI assistant produced the code below when asked for "the analysis of preterm birth".
+**It runs without error.** There are four things wrong with it. Fix them.
+
+```{r bugs, eval=FALSE}
+cohort <- births |>
+  left_join(screening, by = "infant_id") |>
+  left_join(mothers,   by = "momid")
+
+cohort |> summarise(
+  n          = n(),
+  mean_bw    = mean(birth_weight_g),
+  mean_17ohp = mean(x17ohp)
+)
+
+count(cohort, sex)
+
+m <- glm(I(ga_weeks < 37) ~ mat_age + smoking + mat_bmi,
+         data = cohort, family = gaussian)
+tidy(m, exponentiate = TRUE)
+```
+
+```{r bugs-fixed}
+# Your corrected version here.
+```
+
+<details>
+<summary>Answers (open only after you've tried)</summary>
+
+1. The first `left_join()` duplicates infants with a repeat specimen —
+   `nrow()` goes from 1239 to 1372. Filter to `specimen_no == 1` first.
+2. `mean(x17ohp)` returns `NA` because 17-OHP has missing values. Needs `na.rm = TRUE`
+   — *and* you should report how many were missing.
+3. `sex` is still coded `F`/`M`/`f`/`m`, so any sex-stratified result is wrong.
+4. `family = gaussian` on a TRUE/FALSE outcome is a linear probability model;
+   `exponentiate = TRUE` then produces a meaningless number. Use `family = binomial`.
+5. (Bonus) Rows are clustered within `momid` because of twins.
+
+</details>
+
+---
+
+# 11 · Reproducibility check
+
+```{r session}
+sessionInfo()
+```
+
+Knit this document. If it knits from a clean session, your analysis is reproducible.
+If it doesn't, find out why now rather than the week before your defence.

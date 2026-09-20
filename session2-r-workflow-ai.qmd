@@ -1,0 +1,1199 @@
+---
+title: "A Real Analysis in R"
+subtitle: "…and an honest look at AI coding assistants  ·  Part 2 of 2"
+author: "Steven Hawken, PhD — School of Epidemiology & Public Health, University of Ottawa"
+date: today
+date-format: "D MMMM YYYY"
+format:
+  live-revealjs:
+    theme: [default, seminar.scss]
+    slide-number: c/t
+    scrollable: true
+    history: true
+    footer: "MSc Epidemiology · Intro to R & SAS · Session 2"
+    preview-links: auto
+engine: knitr
+webr:
+  packages:
+    - dplyr
+    - tidyr
+    - ggplot2
+    - readr
+    - lubridate
+    - broom
+    - scales
+  cell-options:
+    autorun: false
+    min-lines: 5
+resources:
+  - data
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{webr}
+#| include: false
+#| autorun: true
+# Loaded silently when the slides open, so every cell below has data to work with.
+suppressPackageStartupMessages({
+  library(dplyr); library(tidyr); library(ggplot2)
+  library(readr); library(lubridate); library(broom); library(scales)
+})
+births    <- read_csv("data/births.csv",    show_col_types = FALSE)
+mothers   <- read_csv("data/mothers.csv",   show_col_types = FALSE)
+screening <- read_csv("data/screening.csv", show_col_types = FALSE)
+theme_set(theme_minimal(base_size = 13))
+invisible(TRUE)
+```
+
+## Today {.smaller}
+
+::: {.cols}
+<div>
+### Part 1 — the workflow <span class="muted">(~40 min)</span>
+- Import (including `.sas7bdat`)
+- Clean, and the pipe
+- The five `dplyr` verbs
+- **Joins, and how they silently ruin analyses**
+- Dates, missing data, reshaping
+- A "Table 1"
+- `ggplot2`
+- Regression with tidy output
+</div>
+<div>
+### Part 2 — AI assistants <span class="muted">(~15 min)</span>
+- What they are genuinely good at
+- **Health data: the hard rules**
+- Prompting for reproducible code
+- The hallucination trap
+- A live *spot-the-bug* exercise
+</div>
+:::
+
+::: {.callout-note appearance="simple" .smaller}
+The cells here still run in your browser — but everything today also runs as-is in RStudio.
+The same three CSVs are in the course folder. **Follow along in RStudio if you can.**
+:::
+
+---
+
+## The question we're answering {.smaller}
+
+::: {.keypoint}
+Using a synthetic linked birth cohort: **is 17-hydroxyprogesterone (17-OHP) measured on the
+newborn screening dried blood spot associated with gestational age — and do maternal factors
+predict preterm birth?**
+:::
+
+Three files, exactly the shape of a real linked extract:
+
+| File | Unit | Key | n |
+|---|---|---|---|
+| `births.csv` | one row per **infant** | `infant_id`, `momid` | 1,239 |
+| `mothers.csv` | one row per **mother** | `momid` | 1,200 |
+| `screening.csv` | one row per **specimen** | `infant_id` + `specimen_no` | 1,338 |
+
+: {tbl-colwidths="[26,32,28,14]"}
+
+. . .
+
+<p class="small muted">1,239 infants but only 1,200 mothers, and 1,338 specimens for 1,239 infants.
+Those two mismatches are the whole lesson of the joins section. Fully synthetic data —
+safe to share, safe to paste anywhere.</p>
+
+---
+
+# The workflow {.section-break}
+
+## Every analysis is the same six steps {.smaller}
+
+<div style="font-size:0.9em; line-height:1.9">
+**1 · Import** → get it into R, as the right types<br>
+**2 · Tidy** → one row per observation, one column per variable<br>
+**3 · Transform** → filter, derive, join, aggregate<br>
+**4 · Visualise** → look at it before you model it<br>
+**5 · Model** → the part that takes 5% of the time<br>
+**6 · Communicate** → tables, figures, a reproducible document
+</div>
+
+. . .
+
+::: {.keypoint .smaller}
+Steps 1–3 are **80% of the work** and where essentially all the errors live.
+A wrong `left_join()` will not throw an error — it will quietly give you a different cohort.
+That is why today is mostly steps 1–3.
+:::
+
+---
+
+## Import {.smaller}
+
+```r
+library(tidyverse)
+
+births    <- read_csv("data/births.csv")       # readr: fast, tells you its guesses
+mothers   <- read_csv("data/mothers.csv")
+screening <- read_csv("data/screening.csv")
+
+# other formats you will actually meet
+readxl::read_excel("lab.xlsx", sheet = "Results")
+haven::read_sas("ices_extract.sas7bdat")       # ← SAS datasets, directly
+haven::read_dta("nhanes.dta")
+```
+
+::: {.cols}
+<div>
+::: {.callout-tip appearance="simple" .smaller}
+**`haven::read_sas()` is the bridge.** Your supervisor's `.sas7bdat` opens in R without
+SAS installed, formats and labels included. This is how most people move from SAS to R.
+:::
+</div>
+<div>
+::: {.callout-warning appearance="simple" .smaller}
+`read_csv()` **guesses** column types from the first 1000 rows. If a numeric column has
+`"N/A"` at row 4000, you get a character column. Always check `spec()` or `glimpse()`.
+:::
+</div>
+:::
+
+---
+
+## Look before you leap {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 6
+glimpse(births)
+```
+
+::: {.small .muted}
+`glimpse()` is `str()` with better manners: every column, its type, and the first few values,
+on one screen.
+:::
+
+---
+
+## …and the problems are already visible {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 8
+count(births, sex)                       # four categories for a binary variable
+summary(births$ga_weeks)
+colSums(is.na(mothers))                  # missingness, per column
+n_distinct(screening$infant_id)          # 1205 infants…
+nrow(screening)                          # …but 1338 specimen rows
+```
+
+. . .
+
+::: {.keypoint .smaller}
+Three problems found in four lines: **inconsistent coding**, **missing maternal BMI**,
+and **repeat specimens**. Find these now, not after you've written the discussion section.
+:::
+
+---
+
+## The pipe: `|>` {.smaller}
+
+The pipe takes the thing on the left and makes it the first argument of the thing on the right.
+It turns nested code inside-out so you read it in the order it happens.
+
+::: {.cols}
+<div>
+### Without
+```r
+arrange(
+  filter(
+    select(births, infant_id, ga_weeks, site),
+    ga_weeks < 37),
+  ga_weeks)
+```
+<p class="small muted">Read from the inside out. Nobody enjoys this.</p>
+</div>
+<div>
+### With
+```r
+births |>
+  select(infant_id, ga_weeks, site) |>
+  filter(ga_weeks < 37) |>
+  arrange(ga_weeks)
+```
+<p class="small muted">"Take births, <b>then</b> select, <b>then</b> filter, <b>then</b> sort."</p>
+</div>
+:::
+
+::: {.small .muted}
+<kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> inserts a pipe in RStudio.
+You'll also see `%>%` from `magrittr` in older code — they behave the same for our purposes.
+:::
+
+---
+
+## Verb 1–2: `filter()` and `select()` {.smaller}
+
+`filter()` picks **rows**. `select()` picks **columns**.
+
+```{webr}
+#| autorun: true
+#| min-lines: 8
+births |>
+  filter(ga_weeks < 37, site == "Ottawa") |>      # commas mean AND
+  select(infant_id, ga_weeks, birth_weight_g, sex) |>
+  arrange(ga_weeks)
+```
+
+::: {.rs .smaller}
+<div class="r-side">
+#### R
+```r
+filter(ga_weeks < 37)
+select(id, ga_weeks)
+```
+</div>
+<div class="sas-side">
+#### SAS
+```sas
+IF ga_weeks < 37;
+KEEP id ga_weeks;
+```
+</div>
+:::
+
+---
+
+## Verb 3: `mutate()` — deriving variables {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 10
+births2 <- births |>
+  mutate(
+    sex      = toupper(sex),                       # fix F/f/M/m
+    bw_kg    = birth_weight_g / 1000,
+    preterm  = ga_weeks < 37,                      # logical: TRUE/FALSE
+    ga_group = case_when(
+      ga_weeks < 32            ~ "very preterm",
+      ga_weeks < 37            ~ "preterm",
+      ga_weeks < 42            ~ "term",
+      .default                 = "post-term"
+    ),
+    ga_group = factor(ga_group,
+                      levels = c("term", "preterm", "very preterm", "post-term"))
+  )
+
+count(births2, ga_group)
+```
+
+::: {.callout-important appearance="simple" .smaller}
+`case_when()` evaluates **top to bottom and stops at the first match** — exactly like a
+SAS `IF/ELSE IF` chain. Order your conditions from most specific to least.
+:::
+
+---
+
+## Your turn: derive and categorise {.smaller}
+
+Create a birth-weight category and count it.
+
+```{webr}
+#| exercise: ex_mutate
+#| min-lines: 10
+births |>
+  mutate(
+    bw_cat = case_when(
+      birth_weight_g < 1500 ~ "very low",
+      birth_weight_g < ______ ~ "low",
+      .default = "normal"
+    )
+  ) |>
+  ______(bw_cat)
+```
+
+::: {.hint exercise="ex_mutate"}
+#### Hint
+The conventional low-birth-weight cut-point is 2500 g. To tabulate a variable in `dplyr`,
+the verb is `count()`.
+:::
+
+::: {.solution exercise="ex_mutate"}
+#### Solution
+```{webr}
+#| exercise: ex_mutate
+#| solution: true
+births |>
+  mutate(
+    bw_cat = case_when(
+      birth_weight_g < 1500 ~ "very low",
+      birth_weight_g < 2500 ~ "low",
+      .default = "normal"
+    )
+  ) |>
+  count(bw_cat)
+```
+:::
+
+---
+
+## Verbs 4–5: `group_by()` + `summarise()` {.smaller}
+
+This pair replaces `PROC MEANS` / `PROC SUMMARY` and does far more.
+
+```{webr}
+#| autorun: true
+#| min-lines: 9
+births |>
+  mutate(sex = toupper(sex)) |>
+  group_by(site, sex) |>
+  summarise(
+    n         = n(),
+    mean_bw   = mean(birth_weight_g),
+    sd_bw     = sd(birth_weight_g),
+    pct_preterm = 100 * mean(ga_weeks < 37),
+    .groups   = "drop"
+  ) |>
+  arrange(desc(n))
+```
+
+::: {.small .muted}
+`.groups = "drop"` un-groups the result. Forget it and every later verb silently operates
+within group — a subtle and very common bug.
+:::
+
+---
+
+## Your turn: group and summarise {.smaller}
+
+Mean and SD of gestational age, by delivery mode, with the number in each group.
+
+```{webr}
+#| exercise: ex_group
+#| min-lines: 9
+births |>
+  ______(delivery_mode) |>
+  summarise(
+    n       = ______,
+    mean_ga = mean(ga_weeks),
+    sd_ga   = ______(ga_weeks),
+    .groups = "drop"
+  )
+```
+
+::: {.hint exercise="ex_group"}
+#### Hint
+The grouping verb is `group_by()`. `n()` counts rows in the current group (no arguments).
+`sd()` is the standard deviation.
+:::
+
+::: {.solution exercise="ex_group"}
+#### Solution
+```{webr}
+#| exercise: ex_group
+#| solution: true
+births |>
+  group_by(delivery_mode) |>
+  summarise(
+    n       = n(),
+    mean_ga = mean(ga_weeks),
+    sd_ga   = sd(ga_weeks),
+    .groups = "drop"
+  )
+```
+:::
+
+---
+
+# Joins {.section-break background-color="#8b1d41"}
+
+## The four joins you need {.smaller}
+
+::: {.cols}
+<div>
+```r
+left_join(a, b, by = "id")
+```
+<p class="small">Keep <b>all of a</b>. Unmatched rows of a get <code>NA</code>.
+<b>This is your default.</b> It preserves your cohort.</p>
+
+```r
+inner_join(a, b, by = "id")
+```
+<p class="small">Keep only rows present in <b>both</b>. Silently drops cases —
+so always know how many.</p>
+</div>
+<div>
+```r
+full_join(a, b, by = "id")
+```
+<p class="small">Keep everything from both. Useful when assembling a cohort from
+multiple registries.</p>
+
+```r
+anti_join(a, b, by = "id")
+```
+<p class="small">Rows of a with <b>no</b> match in b. <b>An auditing tool</b> —
+"who is missing a screening result, and are they different?"</p>
+</div>
+:::
+
+::: {.rs .smaller}
+<div class="r-side">
+#### R
+```r
+left_join(births, mothers, by = "momid")
+```
+</div>
+<div class="sas-side">
+#### SAS
+```sas
+DATA out; MERGE births(IN=a) mothers;
+  BY momid; IF a; RUN;
+```
+</div>
+:::
+
+---
+
+## The join that ruins analyses {.time}live{.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 7
+nrow(births)                                          # 1239 infants
+
+naive <- left_join(births, screening, by = "infant_id")
+nrow(naive)                                           # …and now?
+
+# where did the extra rows come from?
+naive |> count(infant_id) |> filter(n > 1) |> head(4)
+```
+
+. . .
+
+::: {.callout-important appearance="simple"}
+**Your cohort just grew by 133 rows.** 133 infants had a repeat screening specimen, so each of them now
+contributes **two rows**. Every subsequent `n()`, mean, and regression is now weighted
+towards infants who were screened twice — which is to say, towards the sickest infants.
+Nothing errored. Nothing warned you.
+:::
+
+---
+
+## Fix it: decide *which* record you want {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 10
+# Option A — keep the first (initial) specimen only. Usually what you want.
+first_spec <- screening |>
+  filter(specimen_no == 1)
+
+# Option B — keep the earliest collection per infant, whatever it's numbered
+first_spec_b <- screening |>
+  group_by(infant_id) |>
+  slice_min(age_at_collection_h, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+cohort <- births |> left_join(first_spec, by = "infant_id")
+
+c(births = nrow(births), cohort = nrow(cohort))       # now they match
+```
+
+::: {.keypoint .smaller}
+**The habit that will save you:** print `nrow()` before and after every join.
+If the number changed and you didn't expect it to, stop.
+:::
+
+---
+
+## `anti_join()` — who did we lose, and are they different? {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 8
+unscreened <- anti_join(births, screening, by = "infant_id")
+nrow(unscreened)
+
+# Never just drop them. Compare them first.
+bind_rows(
+  unscreened |> mutate(grp = "no screen"),
+  semi_join(births, screening, by = "infant_id") |> mutate(grp = "screened")
+) |>
+  group_by(grp) |>
+  summarise(n = n(), mean_ga = mean(ga_weeks), mean_bw = mean(birth_weight_g))
+```
+
+::: {.small .muted}
+If the unmatched infants are systematically smaller or earlier, your complete-case analysis
+is biased and you need to say so. This three-line check belongs in every linkage paper you write.
+:::
+
+---
+
+## One more trap: many-to-one on the *mother* {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 7
+nrow(births); nrow(mothers)
+
+full <- cohort |> left_join(mothers, by = "momid")
+nrow(full)                                    # unchanged — good
+
+# but note: mothers of twins are counted twice at the infant level
+full |> count(momid) |> filter(n > 1) |> nrow()
+```
+
+::: {.callout-note appearance="simple" .smaller}
+That is **not** a bug — an infant-level analysis correctly has one row per infant.
+But those infants are **not independent**, so a standard `glm()` understates the standard
+errors. You would need a cluster-robust variance or a random effect for `momid`.
+Recognising the clustering is the epidemiology; the join is just plumbing.
+:::
+
+---
+
+## Your turn: build the analysis cohort {.smaller}
+
+```{webr}
+#| exercise: ex_join
+#| min-lines: 10
+analysis <- births |>
+  mutate(sex = toupper(sex)) |>
+  left_join(screening |> filter(specimen_no ______ 1), by = "infant_id") |>
+  ______(mothers, by = "momid")
+
+# it MUST still have 1239 rows
+nrow(analysis)
+nrow(analysis) == nrow(births)
+```
+
+::: {.hint exercise="ex_join"}
+#### Hint
+You want only the *first* specimen, so `specimen_no` should equal 1 (`==`).
+For the second join you want to keep every infant, so use `left_join()`.
+:::
+
+::: {.solution exercise="ex_join"}
+#### Solution
+```{webr}
+#| exercise: ex_join
+#| solution: true
+analysis <- births |>
+  mutate(sex = toupper(sex)) |>
+  left_join(screening |> filter(specimen_no == 1), by = "infant_id") |>
+  left_join(mothers, by = "momid")
+
+nrow(analysis)
+nrow(analysis) == nrow(births)
+```
+:::
+
+---
+
+# Dates, missingness, shape {.section-break}
+
+## Dates with `lubridate` {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 10
+class(births$birth_datetime)          # read_csv already recognised this as a datetime
+
+d <- births |>
+  mutate(
+    birth_date  = as_date(birth_datetime),
+    birth_month = month(birth_datetime, label = TRUE),
+    birth_wday  = wday(birth_datetime, label = TRUE),
+    ga_days     = round(ga_weeks * 7)
+  )
+
+count(d, birth_wday)
+```
+
+::: {.callout-tip appearance="simple" .smaller}
+`read_csv()` parses ISO-style datetimes for you; `read.csv()` leaves them as text.
+When a date arrives as text — and from SAS or Excel it usually does — parse it explicitly
+with the function whose **name is the format**: `ymd()`, `dmy()`, `ymd_hm()`, `mdy_hms()`.
+:::
+
+---
+
+## Date arithmetic: time to specimen collection {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 10
+timing <- births |>
+  select(infant_id, birth_datetime) |>
+  left_join(select(screening, infant_id, specimen_no, collection_datetime),
+            by = "infant_id") |>
+  mutate(
+    hours_to_collection = as.numeric(difftime(collection_datetime, birth_datetime,
+                                              units = "hours")),
+    too_early = hours_to_collection < 24          # screening guideline flag
+  )
+
+timing |> group_by(specimen_no) |>
+  summarise(n = n(), median_h = median(hours_to_collection), n_early = sum(too_early))
+```
+
+::: {.rs .smaller}
+<div class="r-side">
+#### R
+```r
+as_date(x); year(x); month(x, label = TRUE)
+difftime(b, a, units = "hours")
+```
+</div>
+<div class="sas-side">
+#### SAS
+```sas
+dob = DATEPART(birth_dtm);
+FORMAT dob date9.;
+hrs = INTCK('hour', birth_dtm, coll_dtm);
+```
+</div>
+:::
+
+---
+
+## Missing data — think, then act {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 9
+analysis <- births |>
+  mutate(sex = toupper(sex)) |>
+  left_join(filter(screening, specimen_no == 1), by = "infant_id") |>
+  left_join(mothers, by = "momid")
+
+# how much, and where?
+analysis |> summarise(across(everything(), ~ sum(is.na(.x)))) |>
+  pivot_longer(everything(), names_to = "var", values_to = "n_missing") |>
+  filter(n_missing > 0)
+```
+
+::: {.keypoint .smaller}
+`drop_na()` is one keystroke and a substantive decision. Complete-case analysis is only
+unbiased under **MCAR** — a strong assumption you should state and, ideally, test.
+For anything going in a paper, look at `mice` for multiple imputation.
+:::
+
+---
+
+## Wide → long with `pivot_longer()` {.smaller}
+
+Five analytes in five columns is convenient for storage and useless for plotting.
+
+```{webr}
+#| autorun: true
+#| min-lines: 9
+long <- analysis |>
+  select(infant_id, ga_weeks, tsh, x17ohp, phe, leu, ala) |>
+  pivot_longer(
+    cols      = c(tsh, x17ohp, phe, leu, ala),
+    names_to  = "analyte",
+    values_to = "value"
+  )
+
+long |> group_by(analyte) |>
+  summarise(n = sum(!is.na(value)), median = median(value, na.rm = TRUE))
+```
+
+::: {.small .muted}
+`pivot_wider()` goes the other way. In SAS this is `PROC TRANSPOSE`, which is —
+and this is a defensible professional opinion — considerably less pleasant.
+:::
+
+---
+
+## A publishable "Table 1" {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 11
+analysis |>
+  mutate(preterm = if_else(ga_weeks < 37, "Preterm (<37wk)", "Term")) |>
+  group_by(preterm) |>
+  summarise(
+    n            = n(),
+    `Mat. age`   = sprintf("%.1f (%.1f)", mean(mat_age), sd(mat_age)),
+    `Mat. BMI`   = sprintf("%.1f (%.1f)", mean(mat_bmi, na.rm = TRUE), sd(mat_bmi, na.rm = TRUE)),
+    `Smoking %`  = sprintf("%.1f", 100 * mean(smoking == "yes")),
+    `Hypert. %`  = sprintf("%.1f", 100 * mean(hypertension)),
+    `Birth wt g` = sprintf("%.0f (%.0f)", mean(birth_weight_g), sd(birth_weight_g)),
+    .groups = "drop"
+  )
+```
+
+::: {.callout-tip appearance="simple" .smaller}
+In RStudio, `gtsummary::tbl_summary(data, by = preterm) |> add_p()` does all of this —
+with formatting, p-values, and export to Word — in two lines. Try it locally:
+`install.packages("gtsummary")`.
+:::
+
+---
+
+# Visualisation {.section-break}
+
+## The grammar of graphics {.smaller}
+
+Every `ggplot` is the same three things: **data**, an **aesthetic mapping**
+(which variable goes on which channel), and one or more **geoms**.
+
+```{webr}
+#| autorun: true
+#| fig-width: 8
+#| fig-height: 3.4
+#| min-lines: 6
+ggplot(analysis, aes(x = ga_weeks)) +
+  geom_histogram(binwidth = 0.5, fill = "#8b1d41", colour = "white") +
+  geom_vline(xintercept = 37, linetype = "dashed", linewidth = 0.9, colour = "#12707a") +
+  labs(title = "Gestational age at birth", x = "Completed weeks", y = "Infants")
+```
+
+---
+
+## Comparing groups {.smaller}
+
+```{webr}
+#| autorun: true
+#| fig-width: 8
+#| fig-height: 3.4
+#| min-lines: 6
+analysis |>
+  filter(!is.na(sex)) |>
+  ggplot(aes(x = site, y = birth_weight_g, fill = sex)) +
+  geom_boxplot(outlier.alpha = 0.4) +
+  labs(x = NULL, y = "Birth weight (g)", fill = "Sex",
+       title = "Birth weight by site and sex")
+```
+
+---
+
+## The plot that answers our question {.smaller}
+
+```{webr}
+#| autorun: true
+#| fig-width: 8
+#| fig-height: 3.6
+#| min-lines: 8
+analysis |>
+  filter(!is.na(x17ohp)) |>
+  ggplot(aes(x = ga_weeks, y = x17ohp)) +
+  geom_point(alpha = 0.45, colour = "#21303b") +
+  geom_smooth(method = "loess", se = TRUE, colour = "#8b1d41") +
+  scale_y_log10(labels = label_number()) +
+  labs(x = "Gestational age (weeks)", y = "17-OHP (nmol/L, log scale)",
+       title = "17-OHP falls steeply with increasing gestational age")
+```
+
+::: {.small .muted}
+`scale_y_log10()` is doing real work here — 17-OHP is strongly right-skewed, which is why
+newborn screening programmes use **gestational-age-stratified cut-points** rather than one
+threshold for everyone.
+:::
+
+---
+
+## Your turn: faceting {.smaller}
+
+Split the birth-weight-by-gestational-age relationship by sex.
+
+```{webr}
+#| exercise: ex_plot
+#| fig-width: 8
+#| fig-height: 3.2
+#| min-lines: 8
+analysis |>
+  filter(!is.na(sex)) |>
+  ggplot(aes(x = ga_weeks, y = birth_weight_g)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm") +
+  ______(~ sex) +
+  labs(x = "Gestational age (weeks)", y = "Birth weight (g)")
+```
+
+::: {.hint exercise="ex_plot"}
+#### Hint
+The function that splits a plot into panels by one variable is `facet_wrap()`.
+:::
+
+::: {.solution exercise="ex_plot"}
+#### Solution
+```{webr}
+#| exercise: ex_plot
+#| solution: true
+analysis |>
+  filter(!is.na(sex)) |>
+  ggplot(aes(x = ga_weeks, y = birth_weight_g)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ sex) +
+  labs(x = "Gestational age (weeks)", y = "Birth weight (g)")
+```
+:::
+
+---
+
+# Modelling {.section-break}
+
+## Linear and logistic, and `broom` {.smaller}
+
+```{webr}
+#| autorun: true
+#| min-lines: 10
+m1 <- lm(birth_weight_g ~ ga_weeks + sex + smoking + mat_age, data = analysis)
+tidy(m1, conf.int = TRUE) |> mutate(across(where(is.numeric), \(x) round(x, 2)))
+
+m2 <- glm(I(ga_weeks < 37) ~ mat_age + smoking + hypertension + diabetes_pre,
+          data = analysis, family = binomial)
+
+tidy(m2, exponentiate = TRUE, conf.int = TRUE) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3)))
+```
+
+::: {.keypoint .smaller}
+`broom::tidy()` turns any model into a **data frame** — so odds ratios and CIs flow straight
+into `ggplot()`, `knitr::kable()`, or a `.csv` for your manuscript. No more copying numbers
+out of printed output by hand. That alone is worth the switch from SAS.
+:::
+
+---
+
+## Checking the model, and the R ↔ SAS map {.smaller}
+
+::: {.cols}
+<div>
+```r
+glance(m1)          # R², AIC, F, df
+augment(m1)         # fitted values + residuals
+par(mfrow = c(2,2)); plot(m1)
+```
+<p class="small"><code>augment()</code> gives you residuals as a column, so diagnostics
+are just another ggplot.</p>
+</div>
+<div>
+| R | SAS |
+|---|---|
+| `lm()` | `PROC REG` / `GLM` |
+| `glm(family=binomial)` | `PROC LOGISTIC` |
+| `glm(family=poisson)` | `PROC GENMOD` |
+| `coxph(Surv(t,d)~x)` | `PROC PHREG` |
+| `lme4::lmer()` | `PROC MIXED` |
+| `survey::svyglm()` | `PROC SURVEYLOGISTIC` |
+</div>
+:::
+
+---
+
+# AI coding assistants {.section-break background-color="#8b1d41"}
+
+## What we're talking about {.time}15 min{.smaller}
+
+| | Examples | Where it lives |
+|---|---|---|
+| **Chat assistants** | Claude, ChatGPT, Gemini | Browser. You paste code in and out. |
+| **In-editor completion** | GitHub Copilot, Positron Assistant, RStudio + `chattr`/`ellmer` | Suggests as you type, sees your open files |
+| **Agentic tools** | Claude Code, Codex, Cursor | Reads *and writes* files, runs code, iterates |
+| **Institution-hosted** | Azure OpenAI / Bedrock behind a hospital firewall | Same models, data stays inside the tenancy |
+
+: {tbl-colwidths="[24,40,36]"}
+
+. . .
+
+::: {.keypoint .smaller}
+These are now ordinary tools for research programming, and pretending otherwise does not
+serve you. But they are **assistants**, not analysts — the last two rows of this table are
+also where the data-governance questions get serious.
+:::
+
+---
+
+## What they are genuinely good at {.smaller}
+
+::: {.incremental}
+- **Translating between languages.** "Here is a SAS `PROC LOGISTIC` with a `CLASS` statement — write the R equivalent." This works remarkably well and is worth knowing about on day one.
+- **Boilerplate and syntax you'd otherwise look up.** `ggplot` theming, `regex`, reshaping, date parsing, `case_when` chains.
+- **Explaining code you inherited.** "What does this 200-line DATA step actually do?" — then *you* verify.
+- **Decoding error messages.** Paste the error and the offending line; you'll usually get a real answer faster than a search.
+- **Writing comments and documentation** for code you already wrote and understand.
+- **Being a rubber duck at 11pm** when your supervisor is asleep.
+:::
+
+---
+
+## The hard rules for health data {.smaller}
+
+::: {.keypoint}
+**Nothing that identifies a person, and nothing from a secure analytic environment,
+ever goes into a cloud AI tool. No exceptions, no "just this once", no "it's only 10 rows".**
+:::
+
+::: {.incremental .smaller}
+- **No row-level data.** Not ICES, not BORN, not TOHDW, not your REB-approved chart abstraction. Pasting it is a privacy breach and likely a DUA violation, whether or not anything bad happens next.
+- **Secure environments are secure environments.** If you cannot copy data out, you cannot copy data out *into a chat window* either. That includes screenshots.
+- **Direct identifiers are obvious; indirect ones are not.** Postal code + birth date + rare diagnosis re-identifies a person as surely as a name.
+- **Your DUA and REB protocol govern.** Read the data-sharing clause. Ask your data custodian *before*, not after.
+- **Check your institution's policy.** uOttawa, OHRI, CHEO and ICES each have one, and they differ.
+:::
+
+---
+
+## How to work safely anyway {.smaller}
+
+::: {.cols}
+<div>
+### Send the *schema*, never the data
+```r
+# paste THIS, not the dataset
+str(analysis)
+# or an obviously fake sample:
+head(analysis) |>
+  mutate(across(everything(),
+                ~ sample(.x)))
+```
+<p class="small">The model needs column names and types to write correct code.
+It does not need your patients.</p>
+</div>
+<div>
+### Develop on synthetic data
+<p class="small">Write and debug against simulated data that has the same structure
+(exactly like the files we used today), then move the finished script into the secure
+environment and run it there. This is how a lot of professional analytic work is actually
+done, and it is a defensible workflow to describe in a methods section.</p>
+</div>
+:::
+
+::: {.callout-note appearance="simple" .smaller}
+**Ask about an institution-hosted option.** Many hospitals and universities now run models
+inside their own tenancy where data does not leave the boundary. That changes the calculus —
+but confirm it in writing, don't assume it from a vendor's marketing page.
+:::
+
+---
+
+## Prompting for code you can actually use {.smaller}
+
+::: {.cols-40-60}
+<div>
+### Weak
+```text
+make me a graph of birth weight
+```
+</div>
+<div>
+### Strong
+```text
+I have a data frame `analysis` (1239 rows):
+ga_weeks (num), birth_weight_g (int),
+sex (chr "M"/"F"), site (chr, 5 levels).
+
+Write tidyverse/ggplot2 code for a scatter
+plot of birth weight vs gestational age,
+faceted by sex, with a linear smooth and
+95% CI. Label axes for a journal figure.
+Comment each step. R 4.4, ggplot2 3.5.
+```
+</div>
+:::
+
+::: {.incremental .smaller}
+- **State the dialect** — "tidyverse", "base R", "data.table". Otherwise you get a mash of all three.
+- **Give the schema and the row count.** Column names and types are what it actually needs.
+- **Ask for comments**, then read them. If a comment doesn't match the code, the code is wrong.
+- **Ask it to explain its choice** of test/model. A vague justification is a red flag.
+- **Iterate.** "That dropped the NAs silently — rewrite it so missingness is explicit."
+:::
+
+---
+
+## The hallucination trap {.smaller}
+
+These models are trained to produce **plausible** text. Plausible R code that runs and
+returns a number is the most dangerous possible failure mode, because nothing alerts you.
+
+::: {.incremental .smaller}
+- **Invented functions and arguments.** `tidyverse::clean_names()`, `geom_boxplot(se = TRUE)`, a `conf.level` argument that doesn't exist. These at least error.
+- **Wrong defaults, silently.** `mean()` without `na.rm`. `cor()` dropping pairs. `type = "response"` omitted from `predict()`.
+- **Statistically wrong but syntactically perfect.** A `gaussian` family on a binary outcome. A t-test on paired data. Ignoring clustering by mother. It runs. It prints. It's wrong.
+- **Confidently wrong citations and package claims.** It will tell you a package does something it does not.
+- **Sycophancy.** Push back on a correct answer and it will often "correct" itself into an error.
+:::
+
+. . .
+
+::: {.keypoint .smaller}
+**You are the author.** Your name goes on the paper; the model's does not.
+Treat generated code exactly as you would code from a fast, confident, well-read
+summer student who has never once said "I'm not sure".
+:::
+
+---
+
+## Live exercise: spot the bugs {.time}8 min{.smaller}
+
+I asked an assistant for "the analysis of preterm birth". It produced this. **It runs.**
+There are **four** things wrong with it. Find them, then fix them.
+
+```{webr}
+#| exercise: ex_bug
+#| min-lines: 14
+cohort <- births |>
+  left_join(screening, by = "infant_id") |>
+  left_join(mothers,   by = "momid")
+
+cohort |> summarise(
+  n           = n(),
+  mean_bw     = mean(birth_weight_g),
+  mean_17ohp  = mean(x17ohp)
+)
+
+count(cohort, sex)
+
+m <- glm(I(ga_weeks < 37) ~ mat_age + smoking + mat_bmi,
+         data = cohort, family = gaussian)
+tidy(m, exponentiate = TRUE)
+```
+
+::: {.hint exercise="ex_bug"}
+#### Hint
+1. Compare `nrow(cohort)` with `nrow(births)`. Which join changed the row count, and why?
+2. Look at `mean_17ohp`. Why is it `NA`?
+3. Look at the output of `count(cohort, sex)`. How many sexes are there?
+4. `ga_weeks < 37` is TRUE/FALSE. Is `gaussian` the right family for that — and does
+   `exponentiate = TRUE` mean anything if it isn't?
+:::
+
+::: {.solution exercise="ex_bug"}
+#### Solution
+```{webr}
+#| exercise: ex_bug
+#| solution: true
+# 1. Keep ONE screening record per infant, or the cohort inflates 1239 -> 1372
+# 2. mean() needs na.rm = TRUE; 17-OHP has missing values
+# 3. sex is coded F/M/f/m and must be harmonised before it is used
+# 4. A binary outcome needs family = binomial; only then does exponentiate = TRUE
+#    give odds ratios rather than nonsense
+cohort <- births |>
+  mutate(sex = toupper(sex)) |>
+  left_join(filter(screening, specimen_no == 1), by = "infant_id") |>
+  left_join(mothers, by = "momid")
+
+stopifnot(nrow(cohort) == nrow(births))     # guard rail: fail loudly
+
+cohort |> summarise(
+  n          = n(),
+  mean_bw    = mean(birth_weight_g, na.rm = TRUE),
+  mean_17ohp = mean(x17ohp, na.rm = TRUE),
+  n_missing_17ohp = sum(is.na(x17ohp))
+)
+
+count(cohort, sex)
+
+m <- glm(I(ga_weeks < 37) ~ mat_age + smoking + mat_bmi,
+         data = cohort, family = binomial)
+tidy(m, exponentiate = TRUE, conf.int = TRUE)
+# (and note: twins mean rows are clustered within momid — a robust or
+#  mixed-effects variance would be more honest still)
+```
+:::
+
+---
+
+## A workable policy for your thesis {.smaller}
+
+::: {.incremental}
+1. **Never** paste real data, output containing small cells, or anything from a secure environment.
+2. Use it freely for **syntax, translation, explanation, and debugging**.
+3. **Run every line yourself** and check the intermediate objects — `nrow()`, `count()`, `summary()`.
+4. Never accept a **statistical choice** you couldn't defend in your comprehensive exam.
+5. **Keep the code in version control** so you can see what changed and when.
+6. **Disclose it** if your journal, funder, or program asks — and increasingly they do.
+:::
+
+. . .
+
+::: {.keypoint .smaller}
+The skill that matters is no longer typing `ggplot` from memory. It is **knowing when the
+answer is wrong** — and that still comes from understanding your data and your methods.
+That is what this degree is for.
+:::
+
+---
+
+# Wrap-up {.section-break}
+
+## Making it reproducible {.smaller}
+
+::: {.cols}
+<div>
+```r
+set.seed(20260924)      # anything random
+sessionInfo()           # what you actually ran
+
+renv::init()            # lock package versions
+renv::snapshot()        # to a lockfile in the project
+
+# Quarto: code + prose + results,
+# rendered to Word/PDF/HTML in one step
+quarto::quarto_render("analysis.qmd")
+```
+</div>
+<div>
+::: {.keypoint .smaller}
+These slides are a Quarto document. So is the workbook. If you write your thesis
+analyses this way, the tables and figures **regenerate themselves** when the data
+is corrected — which it will be, twice, the week before your defence.
+:::
+</div>
+:::
+
+---
+
+## Where to go next {.smaller}
+
+::: {.cols}
+<div>
+### Free and excellent
+- **R for Data Science (2e)** — [r4ds.hadley.nz](https://r4ds.hadley.nz)
+- **The Epidemiologist R Handbook** — [epirhandbook.com](https://epirhandbook.com)
+- **Posit cheatsheets** — print `dplyr` + `ggplot2`
+- **Advanced R** — [adv-r.hadley.nz](https://adv-r.hadley.nz), when you're ready
+</div>
+<div>
+### Packages worth your afternoon
+- `gtsummary` — Table 1, and regression tables, to Word
+- `janitor` — `clean_names()`, `tabyl()`
+- `here` — sane file paths
+- `mice` — multiple imputation
+- `survey` — complex survey designs
+- `targets` — pipelines for big analyses
+</div>
+:::
+
+---
+
+## What you can now do {.smaller}
+
+::: {.incremental}
+- Import from CSV, Excel, **and SAS**, and check what you got
+- Clean, derive, and categorise variables the way an epidemiologist needs to
+- Join linked data files **without silently changing your cohort**
+- Audit who didn't link, and whether they differ
+- Produce a Table 1 and journal-quality figures
+- Fit and tidy a regression model
+- Use an AI assistant productively, safely, and sceptically
+:::
+
+. . .
+
+<br>
+
+::: {.keypoint}
+The workbook, the data, and both decks are in the course folder.
+Re-run everything. Break it. That's the fastest way to learn it.
+:::
+
+<p class="small muted">`steven.hawken@uottawa.ca` · office hours in Brightspace</p>

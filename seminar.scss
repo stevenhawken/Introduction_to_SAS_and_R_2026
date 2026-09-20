@@ -1,0 +1,101 @@
+/*-- scss:defaults --*/
+
+// EPI Grad Seminar theme — restrained, high-contrast, projector-friendly
+$garnet:      #8b1d41;
+$garnet-soft: #a8476a;
+$slate:       #21303b;
+$slate-mid:   #4a5b68;
+$paper:       #fdfdfb;
+$rule:        #dfe3e6;
+$teal:        #12707a;
+$amber:       #a86a00;
+
+$font-family-sans-serif: "Source Sans Pro", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$presentation-font-size-root: 30px !default;
+$presentation-heading-font: $font-family-sans-serif !default;
+$presentation-heading-color: $slate !default;
+$body-color: $slate !default;
+$body-bg: $paper !default;
+$link-color: $teal !default;
+$code-block-font-size: 0.72em !default;
+$code-color: $garnet !default;
+
+/*-- scss:rules --*/
+
+.reveal h1, .reveal h2, .reveal h3 { letter-spacing: -0.01em; font-weight: 600; }
+
+.reveal h2 {
+  font-size: 1.45em;
+  border-bottom: 3px solid $garnet;
+  padding-bottom: 0.18em;
+  margin-bottom: 0.5em;
+}
+
+.reveal h3 { font-size: 1.05em; color: $garnet; margin-top: 0.7em; }
+
+.reveal .slide-number { font-size: 0.55em; color: $slate-mid; }
+
+.reveal section p, .reveal section li { line-height: 1.35; }
+
+.reveal ul, .reveal ol { margin-bottom: 0.4em; }
+
+// Title slide
+#title-slide .title { color: $garnet; font-size: 1.9em; font-weight: 650; }
+#title-slide .subtitle { color: $slate-mid; font-size: 0.95em; margin-top: 0.3em; }
+#title-slide .author, #title-slide .date { color: $slate-mid; font-size: 0.6em; }
+
+// Section-break slides
+.reveal .slide.section-break h1,
+.reveal section.quarto-title-block + section h1 { color: $garnet; }
+
+// Callouts
+.reveal .callout { font-size: 0.88em; }
+.reveal .callout-title-container { font-weight: 600; }
+
+// Inline code
+.reveal code:not(.sourceCode) { color: $garnet; font-size: 0.92em; }
+
+// Code blocks: tighter for slides
+.reveal pre.sourceCode code { max-height: 460px; }
+.reveal div.sourceCode { margin: 0.35em 0; }
+
+// Two-column helper
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1em; }
+.cols-60-40 { display: grid; grid-template-columns: 3fr 2fr; gap: 1.1em; }
+.cols-40-60 { display: grid; grid-template-columns: 2fr 3fr; gap: 1.1em; }
+
+// R vs SAS comparison panels
+.rs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em; align-items: start; }
+.rs > div { border: 1px solid $rule; border-radius: 6px; padding: 0.45em 0.7em 0.15em; background: #fff; }
+.rs h4 { margin: 0 0 0.25em; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em; color: $slate-mid; }
+.rs .r-side h4 { color: $teal; }
+.rs .sas-side h4 { color: $amber; }
+.rs pre { margin: 0; }
+.rs code { font-size: 0.85em; }
+
+// RStudio pane diagram
+.ide { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 0.5em; font-size: 0.66em; }
+.ide > div { border: 2px solid $rule; border-radius: 6px; padding: 0.5em 0.7em; background: #fff; }
+.ide b { display: block; color: $garnet; font-size: 1.05em; margin-bottom: 0.15em; }
+
+// Small / footnote text
+.small { font-size: 0.78em; }
+.smaller { font-size: 0.66em; }
+.muted { color: $slate-mid; }
+
+// Emphasis box
+.keypoint {
+  border-left: 5px solid $garnet;
+  background: #faf5f7;
+  padding: 0.55em 0.9em;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9em;
+}
+
+// Live cell sizing on slides
+.reveal .cell-editor { font-size: 0.74em; }
+.reveal .exercise-editor-title { font-size: 0.8em; }
+.qwebr-editor, .exercise-editor { font-size: 0.8em; }
+
+// Timing badges
+.time { float: right; font-size: 0.5em; color: $slate-mid; font-weight: 400; letter-spacing: 0.04em; }
