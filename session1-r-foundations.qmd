@@ -16,6 +16,7 @@ format:
     history: true
     footer: "MSc Epidemiology · Intro to R & SAS · Session 1"
     preview-links: auto
+    include-after-body: exercise-reset.html
 engine: knitr
 webr:
   packages:

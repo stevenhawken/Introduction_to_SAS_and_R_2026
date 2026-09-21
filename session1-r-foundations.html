@@ -1419,6 +1419,77 @@ WyJkYXRhL21vdGhlcnMuY3N2IiwiZGF0YS9zY3JlZW5pbmcuY3N2IiwiZGF0YS9wYXRpZW50cy5jc3Yi
         ]
       });
     </script>
+    <!-- Hint/solution reset for quarto-live exercises.
+         Stock behaviour: the hint button cycles Show Hint -> Show Solution -> and is then
+         removed, and "Start Over" resets only the code editor, so a revealed solution stays
+         on screen for the rest of the class. This takes over the button (capture-phase, so
+         live-runtime's own handler never fires) and adds:
+           * a third state, "Hide Solution", returning to "Show Hint"
+           * reset on "Start Over"
+           * reset on every slide change
+         Everything else -- Run Code, Start Over's editor reset -- is left to live-runtime. -->
+    <script>
+    (function () {
+      if (window.__exerciseResetInstalled) return;
+      window.__exerciseResetInstalled = true;
+
+      var HIDE = 'd-none', LBL = '.btn-label-exercise-editor';
+      var state = new Map();
+      function all(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+      function parts(id) {
+        return {
+          hints: all('.exercise-hint[data-exercise="' + id + '"]'),
+          sols:  all('.exercise-solution[data-exercise="' + id + '"]'),
+          btns:  all('.cell[data-exercise="' + id + '"]:not([data-solution]) a.btn')
+                   .filter(function (b) { return /hint|solution/i.test(b.textContent); })
+        };
+      }
+      function show(els) { els.forEach(function (e) { e.classList.remove(HIDE); }); }
+      function hide(els) { els.forEach(function (e) { e.classList.add(HIDE); }); }
+      function label(p, t) {
+        p.btns.forEach(function (b) {
+          var s = b.querySelector(LBL);
+          if (s) { s.textContent = t; }
+          b.setAttribute('aria-label', t);
+        });
+      }
+      function restLabel(p) { return p.hints.length ? 'Show Hint' : 'Show Solution'; }
+
+      function reset(id) {
+        var p = parts(id);
+        hide(p.hints); hide(p.sols); state.set(id, 0); label(p, restLabel(p));
+      }
+      function resetAll() {
+        var ids = new Set(all('[data-exercise]').map(function (e) { return e.dataset.exercise; }));
+        ids.forEach(reset);
+      }
+      function advance(id) {
+        var p = parts(id), st = state.get(id) || 0;
+        if (st === 0 && p.hints.length) { show(p.hints); hide(p.sols); state.set(id, 1); label(p, 'Show Solution'); }
+        else if (st < 2)                { hide(p.hints); show(p.sols); state.set(id, 2); label(p, 'Hide Solution'); }
+        else                            { reset(id); }
+      }
+
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest && e.target.closest('a.btn, button.btn');
+        if (!btn) return;
+        var holder = btn.closest('[data-exercise]');
+        if (!holder) return;
+        var id = holder.dataset.exercise, txt = (btn.textContent || '').trim();
+        if (/^(show hint|show solution|hide solution)$/i.test(txt)) {
+          e.preventDefault(); e.stopPropagation(); advance(id);
+        } else if (/start over/i.test(txt)) {
+          setTimeout(function () { reset(id); }, 0);
+        }
+      }, true);
+
+      (function hook() {
+        if (window.Reveal && window.Reveal.on) { window.Reveal.on('slidechanged', resetAll); }
+        else { setTimeout(hook, 300); }
+      })();
+    })();
+    </script>
     <script type="ojs-module-contents">
     eyJjb250ZW50cyI6W119
     </script>
