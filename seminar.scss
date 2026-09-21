@@ -42,7 +42,13 @@ $code-color: $garnet !default;
 // Title slide
 #title-slide .title { color: $garnet; font-size: 1.9em; font-weight: 650; }
 #title-slide .subtitle { color: $slate-mid; font-size: 0.95em; margin-top: 0.3em; }
-#title-slide .author, #title-slide .date { color: $slate-mid; font-size: 0.6em; }
+#title-slide .date { color: $slate-mid; font-size: 0.6em; }
+#title-slide .quarto-title-author-name {
+  color: $slate-mid; font-size: 0.62em; font-weight: 600; margin-bottom: 0.1em;
+}
+#title-slide .quarto-title-affiliation {
+  color: $slate-mid; font-size: 0.5em; line-height: 1.35; margin: 0.05em 0 0;
+}
 
 // Section-break slides
 .reveal .slide.section-break h1,

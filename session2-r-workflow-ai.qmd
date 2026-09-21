@@ -1,8 +1,12 @@
 ---
 title: "A Real Analysis in R"
 subtitle: "…and an honest look at AI coding assistants  ·  Part 2 of 2"
-author: "Steven Hawken, PhD — School of Epidemiology & Public Health, University of Ottawa"
-date: today
+author:
+  - name: "Steven Hawken, PhD"
+    affiliations:
+      - "Senior Scientist, OHRI"
+      - "Associate Professor, School of Epidemiology & Public Health, University of Ottawa"
+date: 2026-11-23
 date-format: "D MMMM YYYY"
 format:
   live-revealjs:
