@@ -82,7 +82,7 @@ it is instant. It should already be loading in the background.
 :::
 
 ::: {}
-### Next week (Session 2)
+### The second session (23 November)
 
 - A complete analysis workflow in R
 - `dplyr`, joins, dates, missing data
@@ -94,7 +94,7 @@ it is instant. It should already be loading in the background.
 :::::
 
 ::: {.callout-note appearance="simple"}
-**Homework for next week:** install R + RStudio (last slide). Session 2
+**Homework before the second session:** install R + RStudio (last slide). Session 2
 assumes you have them.
 :::
 
@@ -500,7 +500,7 @@ head(births, 4)
 ```
 
 ::: {.small .muted}
-`read.csv()` is base R. Next week we use `readr::read_csv()`, which is
+`read.csv()` is base R. In the second session we use `readr::read_csv()`, which is
 faster, never silently converts text to factors, and tells you what type
 it guessed for each column.
 :::
@@ -525,7 +525,7 @@ sum(is.na(births$ga_weeks))
 ::: {.callout-warning .smaller appearance="simple"}
 **`sex` has four levels: `F`, `M`, `f`, `m`.** A real data-entry
 artefact, and the reason your "male" subgroup is missing a third of its
-cases. We fix this properly next week.
+cases. We fix this properly in the second session.
 :::
 
 ------------------------------------------------------------------------
@@ -591,7 +591,7 @@ abline(v = 37, lwd = 2, lty = 2, col = "#12707a")
 ```
 
 ::: {.small .muted}
-Base graphics are fine for a quick look. Next week we switch to
+Base graphics are fine for a quick look. In the second session we switch to
 `ggplot2`, which is what you'll use for anything going into a
 manuscript.
 :::
@@ -625,7 +625,7 @@ on someone else's machine without asking.
 ::: {}
 ### Worth knowing about
 
-- **tidyverse** — `dplyr`, `ggplot2`, `readr`, … (next week)
+- **tidyverse** — `dplyr`, `ggplot2`, `readr`, … (second session)
 - **haven** — read SAS `.sas7bdat` files directly
 - **janitor** — clean messy variable names
 - **gtsummary** / **tableone** — publication "Table 1"
@@ -743,7 +743,7 @@ reproducible means.
 . . .
 
 ::: {.keypoint .smaller}
-Number 6 gets a full segment next week. Short version for today: it will
+Number 6 gets a full segment in the second session. Short version for today: it will
 confidently invent a function that does not exist, and it must never see
 patient data.
 :::
@@ -1005,7 +1005,7 @@ NOTE: MERGE statement has more than
 **Check `N` after every step.** If `births` had 1,239 observations and
 your merged dataset has 1,372, you have a problem — and SAS told you
 about it in a NOTE you scrolled past. We will do exactly this bug live
-in R next week.
+in R in the second session.
 :::
 
 ------------------------------------------------------------------------
@@ -1072,7 +1072,7 @@ is. Tape it to your monitor.
 
 # Wrap-up {.section-break}
 
-## Before next week {.smaller}
+## Before the second session {.smaller}
 
 ::::: cols
 ::: {}
@@ -1144,7 +1144,7 @@ browser, free.
 <br>
 
 ::: keypoint
-**Next week:** a complete analysis — import, clean, join, summarise,
+**In the second session (23 November):** a complete analysis — import, clean, join, summarise,
 plot, model — and an honest look at what AI coding assistants can and
 cannot do for an epidemiologist.
 :::

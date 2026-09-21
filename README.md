@@ -142,7 +142,7 @@ improvise one. Slides marked **(cut first)** are the ones to drop if you're runn
 | 30–40 | Data frames → Looking at one → **Your turn** → Reading real data → First look → **Your turn** → A first picture |
 | 40–45 | Packages · RStudio panes · Projects & `setwd()` · Where to get unstuck |
 | 45–58 | **SAS tour** — live in OnDemand, `01-sas-basics.sas` |
-| 58–60 | Before next week · What you can already do |
+| 58–60 | Before the second session · What you can already do |
 
 The SAS block is the one to protect. If you are behind at minute 40, cut a "Your turn"
 rather than the SAS demo — the exercises repeat, the SAS tour doesn't.
