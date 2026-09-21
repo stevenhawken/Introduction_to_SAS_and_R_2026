@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with R"
 subtitle: "…and a working tour of SAS  ·  Part 1 of 2"
-author: "Steven Hawken, PhD — School of Epidemiology & Public Health, University of Ottawa"
+author: "Steven Hawken, PhD — Senior Scientist, OHRI, Associate Professor, School of Epidemiology & Public Health, University of Ottawa"
 date: today
 date-format: "D MMMM YYYY"
 format:
@@ -22,6 +22,9 @@ webr:
     min-lines: 4
 resources:
   - data
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
@@ -35,100 +38,115 @@ resources:
 invisible(1)
 ```
 
-::: {.keypoint}
+::: keypoint
 **Everything in this deck runs.** There is nothing to install today.
-Every grey box with a **Run Code** button is a real R session running *inside your browser*.
+Every grey box with a **Run Code** button is a real R session running
+*inside your browser*.
 :::
 
 - Open these slides yourself: the link is in Brightspace
 - Type in the boxes, break things, re-run. You cannot break my copy.
-- <kbd>Shift</kbd> + <kbd>Enter</kbd> runs a cell. **Start Over** resets it.
-- Arrow keys move between slides. Press <kbd>o</kbd> for a slide overview.
+- <kbd>Shift</kbd> + <kbd>Enter</kbd> runs a cell. **Start Over** resets
+  it.
+- Arrow keys move between slides. Press <kbd>o</kbd> for a slide
+  overview.
 
 . . .
 
-<p class="small muted">The first time you click Run it takes ~15 seconds to load R.
-After that it is instant. It should already be loading in the background.</p>
+<p class="small muted">
 
----
+The first time you click Run it takes \~15 seconds to load R. After that
+it is instant. It should already be loading in the background.
+
+</p>
+
+------------------------------------------------------------------------
 
 ## Where we're going {.smaller}
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### Today (Session 1)
+
 - Why write code at all
 - The R / SAS / Python landscape in Canadian health research
 - R's building blocks: objects, vectors, factors, `NA`
 - Data frames, and reading a CSV
 - Packages, help, and RStudio
-- **A working tour of SAS** (~15 min)
-</div>
-<div>
+- **A working tour of SAS** (\~15 min)
+:::
+
+::: {}
 ### Next week (Session 2)
+
 - A complete analysis workflow in R
 - `dplyr`, joins, dates, missing data
 - `ggplot2` and a "Table 1"
 - Regression with tidy output
-- **AI coding assistants** — what they're good for, and how to not get burned
-</div>
+- **AI coding assistants** — what they're good for, and how to not get
+  burned
 :::
+:::::
 
 ::: {.callout-note appearance="simple"}
-**Homework for next week:** install R + RStudio (last slide). Session 2 assumes you have them.
+**Homework for next week:** install R + RStudio (last slide). Session 2
+assumes you have them.
 :::
-
 
 # Why write code at all? {.section-break}
 
 ## The alternative is worse {.smaller}
 
-You *could* do all of this by pointing and clicking in Excel or SPSS. Here is why we don't:
+You *could* do all of this by pointing and clicking in Excel or SPSS.
+Here is why we don't:
 
-::: {.incremental}
-- **You can check your own work.** Six months from now, "how did I define preterm?" has an answer.
-- **Your supervisor can check your work.** So can a peer reviewer, and so can you when a reviewer asks.
-- **The Methods section writes itself.** Your script *is* the methods section.
-- **Data changes. Constantly.** New cases arrive, a variable gets corrected, you discover an exclusion you missed. Re-running a script takes 30 seconds. Redoing 40 clicks takes an afternoon and introduces new errors.
-- **Reproducibility is now an expectation**, from CIHR, from journals, and from ICES.
+::: incremental
+- **You can check your own work.** Six months from now, "how did I
+  define preterm?" has an answer.
+- **Your supervisor can check your work.** So can a peer reviewer, and
+  so can you when a reviewer asks.
+- **The Methods section writes itself.** Your script *is* the methods
+  section.
+- **Data changes. Constantly.** New cases arrive, a variable gets
+  corrected, you discover an exclusion you missed. Re-running a script
+  takes 30 seconds. Redoing 40 clicks takes an afternoon and introduces
+  new errors.
+- **Reproducibility is now an expectation**, from CIHR, from journals,
+  and from ICES.
 :::
 
 . . .
 
-::: {.keypoint}
-A script is a permanent, auditable record of every decision you made about the data.
-That record is the actual scientific product — the p-value is just the last line.
+::: keypoint
+A script is a permanent, auditable record of every decision you made
+about the data. That record is the actual scientific product — the
+p-value is just the last line.
 :::
 
----
+------------------------------------------------------------------------
 
 ## The landscape {.smaller}
 
-| | **R** | **SAS** | **Python** | **Stata** |
-|---|---|---|---|---|
+|   | **R** | **SAS** | **Python** | **Stata** |
+|---------------|---------------|---------------|---------------|---------------|
 | Cost | Free | \$\$\$ (free for students) | Free | \$\$ |
 | Strength | Stats, graphics, new methods | Very large data, validated pipelines | ML / deep learning, engineering | Econometrics, survey data |
 | Epi community | Growing fast | Entrenched | Growing | Strong in health econ |
 | New methods appear | First | 5+ years later | First (ML) | Varies |
 
-: {tbl-colwidths="[16,21,21,21,21]"}
-
-::: {.small}
-**What you will actually meet in Ontario health research:**
-ICES analytic environment → **SAS and R**.
-The Ottawa Hospital Data Warehouse → **SAS and R**.
-BORN Ontario → **SAS and R**.
-Statistics Canada RDCs → **SAS, R, Stata**.
-CHEO/OHRI imaging & ML work → **Python and R**.
+::: small
+**What you will actually meet in Ontario health research:** ICES
+analytic environment → **SAS and R**. The Ottawa Hospital Data Warehouse
+→ **SAS and R**. BORN Ontario → **SAS and R**. Statistics Canada RDCs →
+**SAS, R, Stata**. CHEO/OHRI imaging & ML work → **Python and R**.
 :::
 
 . . .
 
-::: {.keypoint}
-You do not have to choose. You have to be **literate in SAS** and **fluent in R**.
-That is exactly the split of these two sessions.
+::: keypoint
+You do not have to choose. You have to be **literate in SAS** and
+**fluent in R**. That is exactly the split of these two sessions.
 :::
-
 
 # R's building blocks {.section-break}
 
@@ -148,15 +166,16 @@ round(3.14159, 2)
 ```
 
 ::: {.small .muted}
-Anything after `#` is a comment. Comment generously — the person reading your code in
-six months is you, and you will have forgotten everything.
+Anything after `#` is a comment. Comment generously — the person reading
+your code in six months is you, and you will have forgotten everything.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Assignment: making things stick {.smaller}
 
-Use `<-` to give a value a name. (`=` also works, but `<-` is the convention and reads as "gets".)
+Use `<-` to give a value a name. (`=` also works, but `<-` is the
+convention and reads as "gets".)
 
 ```{webr}
 #| autorun: true
@@ -173,17 +192,18 @@ GA_weeks <- 41
 c(ga_weeks, GA_weeks)
 ```
 
-::: {.callout-tip appearance="simple" .smaller}
-**Naming:** lowercase, words separated by `_`, no spaces, don't start with a number.
-`birth_weight_g` is a good name. `bw2FINAL` is a crime against your future self.
+::: {.callout-tip .smaller appearance="simple"}
+**Naming:** lowercase, words separated by `_`, no spaces, don't start
+with a number. `birth_weight_g` is a good name. `bw2FINAL` is a crime
+against your future self.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Vectors: R's atom {.smaller}
 
-Almost everything in R is a **vector** — an ordered collection of values *of the same type*.
-`c()` combines things into one.
+Almost everything in R is a **vector** — an ordered collection of values
+*of the same type*. `c()` combines things into one.
 
 ```{webr}
 #| autorun: true
@@ -198,11 +218,11 @@ sum(ga < 37)           # TRUE counts as 1 → "how many preterm?"
 ```
 
 ::: {.keypoint .smaller}
-**Vectorisation** is the single biggest mental shift from SAS.
-In SAS you think one row at a time. In R you operate on whole columns at once.
+**Vectorisation** is the single biggest mental shift from SAS. In SAS
+you think one row at a time. In R you operate on whole columns at once.
 :::
 
----
+------------------------------------------------------------------------
 
 ## The four types you will meet {.smaller}
 
@@ -222,17 +242,19 @@ class(mixed)
 mixed
 ```
 
-::: {.callout-warning appearance="simple" .smaller}
-That silent coercion is a classic bug source. One stray `"N/A"` typed into a
-birth-weight column turns the whole column into text, and `mean()` then fails.
+::: {.callout-warning .smaller appearance="simple"}
+That silent coercion is a classic bug source. One stray `"N/A"` typed
+into a birth-weight column turns the whole column into text, and
+`mean()` then fails.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Your turn: vectors {.smaller}
 
-Five infants' birth weights in grams. Fill in the blanks to get the **mean in kilograms**
-and the **number of low-birth-weight (<2500 g) infants**.
+Five infants' birth weights in grams. Fill in the blanks to get the
+**mean in kilograms** and the **number of low-birth-weight (\<2500 g)
+infants**.
 
 ```{webr}
 #| exercise: ex_vec
@@ -249,8 +271,8 @@ sum(bw ______ 2500)
 ::: {.hint exercise="ex_vec"}
 <h4>Hint</h4>
 
-`mean()` takes the vector itself. To convert grams to kilograms, divide by 1000.
-For the count, you want the comparison operator "less than".
+`mean()` takes the vector itself. To convert grams to kilograms, divide
+by 1000. For the count, you want the comparison operator "less than".
 :::
 
 ::: {.solution exercise="ex_vec"}
@@ -267,11 +289,12 @@ sum(bw < 2500)
 ```
 :::
 
----
+------------------------------------------------------------------------
 
 ## Missing values are their own thing {.smaller}
 
-`NA` is not zero, not `""`, and not "unknown text". It is R's explicit marker for *missing*.
+`NA` is not zero, not `""`, and not "unknown text". It is R's explicit
+marker for *missing*.
 
 ```{webr}
 #| autorun: true
@@ -287,17 +310,17 @@ bw == NA                  # NEVER do this — NA is not comparable
 ```
 
 ::: {.keypoint .smaller}
-`mean(x)` returning `NA` is a **feature**. It forces you to notice missingness
-and make a deliberate decision, instead of silently analysing a complete-case subset
-you never chose.
+`mean(x)` returning `NA` is a **feature**. It forces you to notice
+missingness and make a deliberate decision, instead of silently
+analysing a complete-case subset you never chose.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Factors: categorical variables with rules {.smaller}
 
-A factor is a categorical variable with a fixed set of **levels** and — critically for us —
-a **reference level**.
+A factor is a categorical variable with a fixed set of **levels** and —
+critically for us — a **reference level**.
 
 ```{webr}
 #| autorun: true
@@ -313,18 +336,19 @@ ga_cat <- factor(c("term", "preterm", "term", "very preterm"),
 table(ga_cat)
 ```
 
-::: {.callout-important appearance="simple" .smaller}
-**This matters for your regressions.** The first level is the reference group.
-By default R sorts alphabetically, so `"exposed"` beats `"unexposed"` and your
-odds ratio comes out upside down. Set levels explicitly. Always.
+::: {.callout-important .smaller appearance="simple"}
+**This matters for your regressions.** The first level is the reference
+group. By default R sorts alphabetically, so `"exposed"` beats
+`"unexposed"` and your odds ratio comes out upside down. Set levels
+explicitly. Always.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Functions, and how to read their help {.smaller}
 
-::: {.cols-60-40}
-<div>
+::::: cols-60-40
+::: {}
 ```{webr}
 #| autorun: true
 #| min-lines: 6
@@ -338,28 +362,33 @@ seq(from = 24, to = 42, by = 2)
 
 quantile(x, probs = c(0.1, 0.5, 0.9), na.rm = TRUE)
 ```
-</div>
-<div>
+:::
+
+::: {}
 ### Getting help
-```r
+
+``` r
 ?mean            # the help page
 args(quantile)   # just the arguments
 example(seq)     # runnable examples
 ```
 
-<p class="small">Help pages are terse but complete. Read the
-<b>Arguments</b> and <b>Examples</b> sections first;
-skip <b>Details</b> until you need it.</p>
-</div>
-:::
+<p class="small">
 
+Help pages are terse but complete. Read the <b>Arguments</b> and
+<b>Examples</b> sections first; skip <b>Details</b> until you need it.
+
+</p>
+:::
+:::::
 
 # Rectangular data {.section-break}
 
 ## Data frames {.smaller}
 
-A **data frame** is what you actually analyse: columns of equal length, each with its own type.
-One row = one observation. This is a SAS dataset, a Stata `.dta`, an Excel sheet.
+A **data frame** is what you actually analyse: columns of equal length,
+each with its own type. One row = one observation. This is a SAS
+dataset, a Stata `.dta`, an Excel sheet.
 
 ```{webr}
 #| autorun: true
@@ -376,7 +405,7 @@ dim(clinic)       # rows, columns
 names(clinic)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Looking at a data frame {.smaller}
 
@@ -397,14 +426,16 @@ clinic$bw_g          # pull out one column with $
 
 ::: {.keypoint .smaller}
 `str()` and `summary()` before anything else. Every time. They catch the
-"birth weight imported as text" and "43% missing" problems before you waste a week.
+"birth weight imported as text" and "43% missing" problems before you
+waste a week.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Your turn: explore and create {.smaller}
 
-Add a `bw_kg` column and a logical `lbw` flag for birth weight under 2500 g.
+Add a `bw_kg` column and a logical `lbw` flag for birth weight under
+2500 g.
 
 ```{webr}
 #| exercise: ex_df
@@ -425,8 +456,8 @@ clinic
 ::: {.hint exercise="ex_df"}
 <h4>Hint</h4>
 
-`clinic$bw_g / 1000` gives kilograms. For the flag you need a comparison that
-returns `TRUE` when the weight is below 2500.
+`clinic$bw_g / 1000` gives kilograms. For the flag you need a comparison
+that returns `TRUE` when the weight is below 2500.
 :::
 
 ::: {.solution exercise="ex_df"}
@@ -445,12 +476,13 @@ clinic
 ```
 :::
 
----
+------------------------------------------------------------------------
 
 ## Reading real data {.smaller}
 
-Our seminar data is a **synthetic** perinatal dataset: births, maternal characteristics, and
-newborn-screening analytes. Structured like the real thing, entirely made up.
+Our seminar data is a **synthetic** perinatal dataset: births, maternal
+characteristics, and newborn-screening analytes. Structured like the
+real thing, entirely made up.
 
 ```{webr}
 #| autorun: true
@@ -463,11 +495,12 @@ head(births, 4)
 ```
 
 ::: {.small .muted}
-`read.csv()` is base R. Next week we use `readr::read_csv()`, which is faster,
-never silently converts text to factors, and tells you what type it guessed for each column.
+`read.csv()` is base R. Next week we use `readr::read_csv()`, which is
+faster, never silently converts text to factors, and tells you what type
+it guessed for each column.
 :::
 
----
+------------------------------------------------------------------------
 
 ## First look — the things that bite {.smaller}
 
@@ -484,16 +517,18 @@ sum(is.na(births$ga_weeks))
 
 . . .
 
-::: {.callout-warning appearance="simple" .smaller}
-**`sex` has four levels: `F`, `M`, `f`, `m`.** A real data-entry artefact, and the reason
-your "male" subgroup is missing a third of its cases. We fix this properly next week.
+::: {.callout-warning .smaller appearance="simple"}
+**`sex` has four levels: `F`, `M`, `f`, `m`.** A real data-entry
+artefact, and the reason your "male" subgroup is missing a third of its
+cases. We fix this properly next week.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Your turn: interrogate the data {.smaller}
 
-How many births were **preterm** (`ga_weeks < 37`), and what proportion is that?
+How many births were **preterm** (`ga_weeks < 37`), and what proportion
+is that?
 
 ```{webr}
 #| exercise: ex_read
@@ -513,9 +548,9 @@ mean(births$birth_weight_g[______])
 ::: {.hint exercise="ex_read"}
 <h4>Hint</h4>
 
-`births$ga_weeks < 37` gives you a logical vector. `sum()` counts the `TRUE`s;
-`mean()` of the same vector gives the proportion. Square brackets `[ ]` subset a
-vector using a logical condition.
+`births$ga_weeks < 37` gives you a logical vector. `sum()` counts the
+`TRUE`s; `mean()` of the same vector gives the proportion. Square
+brackets `[ ]` subset a vector using a logical condition.
 :::
 
 ::: {.solution exercise="ex_read"}
@@ -534,7 +569,7 @@ mean(births$birth_weight_g[births$ga_weeks < 37])
 ```
 :::
 
----
+------------------------------------------------------------------------
 
 ## A first picture {.smaller}
 
@@ -551,216 +586,274 @@ abline(v = 37, lwd = 2, lty = 2, col = "#12707a")
 ```
 
 ::: {.small .muted}
-Base graphics are fine for a quick look. Next week we switch to `ggplot2`, which is
-what you'll use for anything going into a manuscript.
+Base graphics are fine for a quick look. Next week we switch to
+`ggplot2`, which is what you'll use for anything going into a
+manuscript.
 :::
-
 
 # Packages and the working environment {.section-break}
 
 ## Packages {.smaller}
 
-Base R is deliberately small. Everything else lives in **packages** — over 22,000 of them on CRAN.
+Base R is deliberately small. Everything else lives in **packages** —
+over 22,000 of them on CRAN.
 
-::: {.cols}
-<div>
-```r
+::::: cols
+::: {}
+``` r
 # ONCE per computer
 install.packages("tidyverse")
 
 # EVERY session, in your script
 library(tidyverse)
 ```
-<p class="small"><b>Install once, library every time.</b> Never put
-<code>install.packages()</code> in a script you share — it re-downloads on
-someone else's machine without asking.</p>
-</div>
-<div>
+
+<p class="small">
+
+<b>Install once, library every time.</b> Never put
+<code>install.packages()</code> in a script you share — it re-downloads
+on someone else's machine without asking.
+
+</p>
+:::
+
+::: {}
 ### Worth knowing about
+
 - **tidyverse** — `dplyr`, `ggplot2`, `readr`, … (next week)
 - **haven** — read SAS `.sas7bdat` files directly
 - **janitor** — clean messy variable names
 - **gtsummary** / **tableone** — publication "Table 1"
 - **survival**, **lme4**, **mice**, **survey**
-</div>
 :::
+:::::
 
 . . .
 
 ::: {.small .muted}
 `pkg::function()` calls a function without loading the whole package —
-e.g. `haven::read_sas()`. Useful, and it documents where a function came from.
+e.g. `haven::read_sas()`. Useful, and it documents where a function came
+from.
 :::
 
----
+------------------------------------------------------------------------
 
 ## RStudio: the four panes {.smaller}
 
-::: {.ide}
-<div><b>1 · Source (top-left)</b>
-Your script. This is the real work. Write here, not in the console.
-<span class="muted">Ctrl/Cmd + Enter runs the current line.</span></div>
-<div><b>2 · Environment (top-right)</b>
-Every object you've created, with its size and type. Also the History tab.</div>
-<div><b>3 · Console (bottom-left)</b>
-Where code actually executes. Fine for throwaway checks — anything you'd want
-again belongs in the script.</div>
-<div><b>4 · Files / Plots / Packages / Help (bottom-right)</b>
-Your working directory, your figures, and the help pages.</div>
+::::::: ide
+::: {}
+<b>1 · Source (top-left)</b> Your script. This is the real work. Write
+here, not in the console. [Ctrl/Cmd + Enter runs the current
+line.]{.muted}
 :::
+
+::: {}
+<b>2 · Environment (top-right)</b> Every object you've created, with its
+size and type. Also the History tab.
+:::
+
+::: {}
+<b>3 · Console (bottom-left)</b> Where code actually executes. Fine for
+throwaway checks — anything you'd want again belongs in the script.
+:::
+
+::: {}
+<b>4 · Files / Plots / Packages / Help (bottom-right)</b> Your working
+directory, your figures, and the help pages.
+:::
+:::::::
 
 ::: {.keypoint .smaller}
-**The one habit that matters:** work in the Source pane, not the Console.
-If it only ever happened in the Console, it didn't happen.
+**The one habit that matters:** work in the Source pane, not the
+Console. If it only ever happened in the Console, it didn't happen.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Projects, and never using `setwd()` {.smaller}
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### Do this
-```r
+
+``` r
 # File > New Project > New Directory
 # then open the .Rproj file
 
 # paths are relative to the project root
 births <- read_csv("data/births.csv")
 ```
-<p class="small">The project root <i>is</i> your working directory.
-Move the folder, email it, put it on OneDrive — it still works.</p>
-</div>
-<div>
+
+<p class="small">
+
+The project root <i>is</i> your working directory. Move the folder,
+email it, put it on OneDrive — it still works.
+
+</p>
+:::
+
+::: {}
 ### Not this
-```r
+
+``` r
 setwd("C:/Users/shawken/Desktop/
        thesis/final/FINAL2/data")
 ```
-<p class="small">This runs on exactly one computer, until you reorganise
-your Desktop. It is the single most common reason a supervisor
-cannot run a student's code.</p>
-</div>
+
+<p class="small">
+
+This runs on exactly one computer, until you reorganise your Desktop. It
+is the single most common reason a supervisor cannot run a student's
+code.
+
+</p>
 :::
+:::::
 
 . . .
 
-::: {.callout-tip appearance="simple" .smaller}
-**Tools > Global Options > General:** set *Save workspace to .RData on exit* to **Never**,
-and untick *Restore .RData at startup*. You want your script to rebuild everything from
-scratch, every time. That is what reproducible means.
+::: {.callout-tip .smaller appearance="simple"}
+**Tools \> Global Options \> General:** set *Save workspace to .RData on
+exit* to **Never**, and untick *Restore .RData at startup*. You want
+your script to rebuild everything from scratch, every time. That is what
+reproducible means.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Where to get unstuck {.smaller}
 
-1. **`?function`** — read the Arguments and Examples
-2. **Cheatsheets** — `posit.co/resources/cheatsheets` (print the dplyr and ggplot2 ones)
-3. **R for Data Science, 2nd ed.** — free at [r4ds.hadley.nz](https://r4ds.hadley.nz)
-4. **The error message itself.** Paste it into a search engine verbatim. Someone has had it.
-5. **A reproducible example** for your supervisor: the smallest code + data that fails
-6. **AI coding assistants** — genuinely useful, and genuinely dangerous with health data
+1.  **`?function`** — read the Arguments and Examples
+2.  **Cheatsheets** — `posit.co/resources/cheatsheets` (print the dplyr
+    and ggplot2 ones)
+3.  **R for Data Science, 2nd ed.** — free at
+    [r4ds.hadley.nz](https://r4ds.hadley.nz)
+4.  **The error message itself.** Paste it into a search engine
+    verbatim. Someone has had it.
+5.  **A reproducible example** for your supervisor: the smallest code +
+    data that fails
+6.  **AI coding assistants** — genuinely useful, and genuinely dangerous
+    with health data
 
 . . .
 
 ::: {.keypoint .smaller}
-Number 6 gets a full segment next week. Short version for today: it will confidently
-invent a function that does not exist, and it must never see patient data.
+Number 6 gets a full segment next week. Short version for today: it will
+confidently invent a function that does not exist, and it must never see
+patient data.
 :::
-
 
 # A working tour of SAS {.section-break background-color="#8b1d41"}
 
 ## Why you still need SAS [15 min]{.time} {.smaller}
 
-::: {.incremental}
-- **ICES, ICES-uOttawa, TOHDW, CIHI, BORN, StatCan RDCs** all run on it. Large linked
-  administrative holdings, decades of validated code, and analysts who know it cold.
-- It handles data **larger than memory** without you thinking about it — R will fall over
-  on a 40-million-row OHIP claims extract where SAS shrugs.
-- Your supervisor's existing analysis code is probably SAS. You will need to read it,
-  and you will need to check it.
-- It is **extremely stable**. Code written in 2004 still runs. That is a real virtue for
-  a cohort study that has been running since 2004.
+::: incremental
+- **ICES, ICES-uOttawa, TOHDW, CIHI, BORN, StatCan RDCs** all run on it.
+  Large linked administrative holdings, decades of validated code, and
+  analysts who know it cold.
+- It handles data **larger than memory** without you thinking about it —
+  R will fall over on a 40-million-row OHIP claims extract where SAS
+  shrugs.
+- Your supervisor's existing analysis code is probably SAS. You will
+  need to read it, and you will need to check it.
+- It is **extremely stable**. Code written in 2004 still runs. That is a
+  real virtue for a cohort study that has been running since 2004.
 :::
 
 . . .
 
 ::: {.keypoint .smaller}
-**Goal for the next 15 minutes:** not fluency. Enough SAS literacy to read someone
-else's program, run it, and know when the log is lying to you.
+**Goal for the next 15 minutes:** not fluency. Enough SAS literacy to
+read someone else's program, run it, and know when the log is lying to
+you.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Getting SAS, free {.smaller}
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### SAS OnDemand for Academics
+
 Free, runs in a browser, nothing to install, works on a Mac.
 
 [`sas.com/en_ca/software/on-demand-for-academics.html`](https://www.sas.com/en_ca/software/on-demand-for-academics.html)
 
-<p class="small">Register with your <b>uOttawa</b> address. Approval takes a few minutes
-to a day. Do this <b>before</b> you need it for an assignment.</p>
-</div>
-<div>
-### Other routes
-- uOttawa desktop licence (Windows only — Mac users need Parallels or a VM)
-- ICES / TOHDW provide it inside their secure analytic environments
-<p class="small">I will demo in OnDemand now. The `.sas` files for this seminar are
-in the course folder — upload them and run along.</p>
-</div>
+<p class="small">
+
+Register with your <b>uOttawa</b> address. Approval takes a few minutes
+to a day. Do this <b>before</b> you need it for an assignment.
+
+</p>
 :::
 
----
+::: {}
+### Other routes
+
+- uOttawa desktop licence (Windows only — Mac users need Parallels or a
+  VM)
+
+- ICES / TOHDW provide it inside their secure analytic environments
+
+  <p class="small">
+
+  I will demo in OnDemand now. The `.sas` files for this seminar are in
+  the course folder — upload them and run along.
+
+  </p>
+:::
+:::::
+
+------------------------------------------------------------------------
 
 ## The whole language, in one idea {.smaller}
 
 SAS has exactly two kinds of step, and everything is one or the other.
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### `DATA` step
-Reads and writes datasets **one row at a time**.
-Creating variables, filtering, merging, recoding.
 
-```sas
+Reads and writes datasets **one row at a time**. Creating variables,
+filtering, merging, recoding.
+
+``` sas
 DATA preterm;
   SET births;
   IF ga_weeks < 37;
   bw_kg = birth_weight_g / 1000;
 RUN;
 ```
-</div>
-<div>
-### `PROC` step
-Does something to a **whole table**.
-Summarising, tabulating, modelling, plotting.
+:::
 
-```sas
+::: {}
+### `PROC` step
+
+Does something to a **whole table**. Summarising, tabulating, modelling,
+plotting.
+
+``` sas
 PROC MEANS DATA=births;
   CLASS site;
   VAR birth_weight_g;
 RUN;
 ```
-</div>
 :::
+:::::
 
 . . .
 
 ::: {.keypoint .smaller}
-**Every statement ends with a semicolon.** A missing `;` is responsible for roughly
-90% of the time you will lose to SAS. Not an exaggeration.
+**Every statement ends with a semicolon.** A missing `;` is responsible
+for roughly 90% of the time you will lose to SAS. Not an exaggeration.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Libraries: where datasets live {.smaller}
 
-```sas
+``` sas
 /* WORK is temporary — everything in it vanishes when SAS closes */
 DATA births;          /* really WORK.births */
   SET mylib.births;
@@ -774,29 +867,29 @@ DATA mylib.births_clean;   /* saved to disk as births_clean.sas7bdat */
 RUN;
 ```
 
-::: {.rs}
-<div class="r-side">
+::::: rs
+::: r-side
 <h4>R equivalent</h4>
 
-```r
+``` r
 births        # lives in memory only
 saveRDS(births, "data/births.rds")
 ```
-</div>
-<div class="sas-side">
-<h4>The mental model</h4>
-
-`WORK.` = R's environment.
-`LIBNAME` = a folder on disk.
-Two-level name = `library.dataset`.
-</div>
 :::
 
----
+::: sas-side
+<h4>The mental model</h4>
+
+`WORK.` = R's environment. `LIBNAME` = a folder on disk. Two-level name
+= `library.dataset`.
+:::
+:::::
+
+------------------------------------------------------------------------
 
 ## Demo 1 — make a dataset and look at it {.smaller}
 
-```sas
+``` sas
 DATA clinic;
   INPUT id site $ ga_weeks bw_g;
   bw_kg = bw_g / 1000;
@@ -815,15 +908,15 @@ PROC CONTENTS DATA=clinic VARNUM; RUN;
 ```
 
 ::: {.small .muted}
-`$` after a variable name means "this one is character". `VARNUM` lists variables in
-creation order instead of alphabetically — always use it.
+`$` after a variable name means "this one is character". `VARNUM` lists
+variables in creation order instead of alphabetically — always use it.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Demo 2 — import, describe, tabulate {.smaller}
 
-```sas
+``` sas
 PROC IMPORT DATAFILE="/home/steven.hawken0/seminar/data/births.csv"
   OUT=births DBMS=CSV REPLACE;
   GETNAMES=YES;
@@ -845,15 +938,16 @@ RUN;
 ```
 
 ::: {.small .muted}
-Use the **Tasks and Utilities → Import Data** wizard once, then copy the generated
-code into your program. Next time you run the whole thing from the script.
+Use the **Tasks and Utilities → Import Data** wizard once, then copy the
+generated code into your program. Next time you run the whole thing from
+the script.
 :::
 
----
+------------------------------------------------------------------------
 
 ## Demo 3 — a picture {.smaller}
 
-```sas
+``` sas
 PROC SGPLOT DATA=births;
   HISTOGRAM ga_weeks / BINWIDTH=0.5;
   REFLINE 37 / AXIS=X LINEATTRS=(PATTERN=dash THICKNESS=2);
@@ -871,45 +965,50 @@ PROC SGPLOT DATA=births;
 RUN;
 ```
 
----
+------------------------------------------------------------------------
 
 ## **Read the log.** Every time. {.smaller}
 
-SAS will happily produce beautiful, confident, *wrong* output and tell you about it
-only in the log.
+SAS will happily produce beautiful, confident, *wrong* output and tell
+you about it only in the log.
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### Three words to search for
-- <span style="color:#b00">**ERROR**</span> — it stopped. You'll notice.
-- <span style="color:#a86a00">**WARNING**</span> — it kept going. You might not notice.
-- <span style="color:#12707a">**NOTE**</span> — the dangerous one.
-</div>
-<div>
+
+- [**ERROR**]{style="color:#b00"} — it stopped. You'll notice.
+- [**WARNING**]{style="color:#a86a00"} — it kept going. You might not
+  notice.
+- [**NOTE**]{style="color:#12707a"} — the dangerous one.
+:::
+
+::: {}
 ### The NOTEs that ruin analyses
-```text
+
+``` text
 NOTE: Invalid numeric data, 'N/A'
 NOTE: Missing values were generated
 NOTE: MERGE statement has more than
       one dataset with repeats of BY
 ```
-</div>
 :::
+:::::
 
 . . .
 
 ::: {.keypoint .smaller}
-**Check `N` after every step.** If `births` had 1,239 observations and your merged dataset
-has 1,372, you have a problem — and SAS told you about it in a NOTE you scrolled past.
-We will do exactly this bug live in R next week.
+**Check `N` after every step.** If `births` had 1,239 observations and
+your merged dataset has 1,372, you have a problem — and SAS told you
+about it in a NOTE you scrolled past. We will do exactly this bug live
+in R next week.
 :::
 
----
+------------------------------------------------------------------------
 
 ## R ↔ SAS Rosetta stone {.smaller}
 
 | Task | R (tidyverse) | SAS |
-|---|---|---|
+|------------------------|------------------------|------------------------|
 | Create dataset | `tibble()` / `data.frame()` | `DATA`; `INPUT`; `DATALINES` |
 | Import CSV | `read_csv("f.csv")` | `PROC IMPORT ... DBMS=CSV` |
 | Inspect | `str()`, `glimpse()` | `PROC CONTENTS VARNUM` |
@@ -925,16 +1024,15 @@ We will do exactly this bug live in R next week.
 | Logistic model | `glm(y ~ x, family = binomial)` | `PROC LOGISTIC` |
 | Survival | `coxph(Surv(t, d) ~ x)` | `PROC PHREG` |
 
-: {tbl-colwidths="[22,39,39]"}
-
----
+------------------------------------------------------------------------
 
 ## Two SAS habits worth stealing {.smaller}
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### Comment out, don't delete
-```sas
+
+``` sas
 DATA cohort;
   SET births;
   IF ga_weeks >= 22;
@@ -942,76 +1040,112 @@ DATA cohort;
 RUN;
 /* N = 1239 */
 ```
-<p class="small">Record what each version gave you. Reviewers ask.</p>
-</div>
-<div>
-### Recovering from unbalanced quotes
-```sas
-*'; *"; */;
-```
-<p class="small">If a stray quote makes SAS unresponsive, run that line
-(sometimes twice). Harmless if nothing is wrong; saves you a restart if
-something is. Tape it to your monitor.</p>
-</div>
+
+<p class="small">
+
+Record what each version gave you. Reviewers ask.
+
+</p>
 :::
 
+::: {}
+### Recovering from unbalanced quotes
+
+``` sas
+*'; *"; */;
+```
+
+<p class="small">
+
+If a stray quote makes SAS unresponsive, run that line (sometimes
+twice). Harmless if nothing is wrong; saves you a restart if something
+is. Tape it to your monitor.
+
+</p>
+:::
+:::::
 
 # Wrap-up {.section-break}
 
 ## Before next week {.smaller}
 
-::: {.cols}
-<div>
+::::: cols
+::: {}
 ### 1 · Install (please do this)
+
 - **R** — [cran.r-project.org](https://cran.r-project.org)
-- **RStudio Desktop** — [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
+- **RStudio Desktop** —
+  [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
 - Then in the Console:
-```r
+
+``` r
 install.packages(c("tidyverse", "janitor",
                    "broom", "haven", "gtsummary"))
 ```
-<p class="small">Both are free. Install R <b>first</b>, then RStudio.</p>
-</div>
-<div>
-### 2 · Warm-up (10 minutes)
-Make a new RStudio **Project**, drop the seminar `data/` folder inside it, and in a script:
 
-```r
+<p class="small">
+
+Both are free. Install R <b>first</b>, then RStudio.
+
+</p>
+:::
+
+::: {}
+### 2 · Warm-up (10 minutes)
+
+Make a new RStudio **Project**, drop the seminar `data/` folder inside
+it, and in a script:
+
+``` r
 births <- read.csv("data/births.csv")
 str(births)
 summary(births$birth_weight_g)
 table(births$site)
 ```
-<p class="small">If that runs, you are ready for Session 2.</p>
-</div>
+
+<p class="small">
+
+If that runs, you are ready for Session 2.
+
+</p>
 :::
+:::::
 
 . . .
 
-::: {.callout-note appearance="simple" .smaller}
-Stuck on the install? Email me before the session — not during it. Backup:
-[posit.cloud](https://posit.cloud) gives you RStudio in a browser, free.
+::: {.callout-note .smaller appearance="simple"}
+Stuck on the install? Email me before the session — not during it.
+Backup: [posit.cloud](https://posit.cloud) gives you RStudio in a
+browser, free.
 :::
 
----
+------------------------------------------------------------------------
 
 ## What you can already do {.smaller}
 
-::: {.incremental}
-- Explain to a reviewer why your analysis is a script and not a spreadsheet
+::: incremental
+- Explain to a reviewer why your analysis is a script and not a
+  spreadsheet
 - Create and manipulate vectors, factors, and data frames in R
-- Read a CSV, run `str()` and `summary()`, and spot a coding problem before it costs you a week
+- Read a CSV, run `str()` and `summary()`, and spot a coding problem
+  before it costs you a week
 - Handle `NA` deliberately instead of by accident
-- Read a SAS program, run it in OnDemand, and know to check the log and the `N`
+- Read a SAS program, run it in OnDemand, and know to check the log and
+  the `N`
 :::
 
 . . .
 
 <br>
 
-::: {.keypoint}
-**Next week:** a complete analysis — import, clean, join, summarise, plot, model —
-and an honest look at what AI coding assistants can and cannot do for an epidemiologist.
+::: keypoint
+**Next week:** a complete analysis — import, clean, join, summarise,
+plot, model — and an honest look at what AI coding assistants can and
+cannot do for an epidemiologist.
 :::
 
-<p class="small muted">Questions? `steven.hawken@uottawa.ca` · office hours posted in Brightspace</p>
+<p class="small muted">
+
+Questions? `shawken@ohri.ca` ·
+
+</p>

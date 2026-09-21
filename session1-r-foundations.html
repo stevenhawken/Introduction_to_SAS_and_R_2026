@@ -11,7 +11,7 @@
 <link href="session1-r-foundations_files/libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.27">
 
-  <meta name="author" content="Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of Ottawa">
+  <meta name="author" content="Steven Hawken, PhD — Senior Scientist, OHRI, Associate Professor, School of Epidemiology &amp; Public Health, University of Ottawa">
   <meta name="dcterms.date" content="2026-09-20">
   <title>Getting Started with R</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -205,7 +205,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Steven Hawken, PhD — School of Epidemiology &amp; Public Health, University of Ottawa 
+Steven Hawken, PhD — Senior Scientist, OHRI, Associate Professor, School of Epidemiology &amp; Public Health, University of Ottawa 
 </div>
 </div>
 </div>
@@ -235,8 +235,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1
 </ul>
 <div class="fragment">
 <p class="small muted">
-The first time you click Run it takes ~15 seconds to load R. After that it is instant. It should already be loading in the background.
-</p>
+</p><p>The first time you click Run it takes ~15 seconds to load R. After that it is instant. It should already be loading in the background.</p>
+<p></p>
 </div>
 </section>
 <section id="where-were-going" class="slide level2 smaller">
@@ -294,13 +294,13 @@ The first time you click Run it takes ~15 seconds to load R. After that it is in
 </section>
 <section id="the-landscape" class="slide level2 smaller">
 <h2>The landscape</h2>
-<table class="caption-top" style="width:100%;">
+<table class="caption-top">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 21%">
-<col style="width: 21%">
-<col style="width: 21%">
-<col style="width: 21%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -542,8 +542,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsIm1pbi1saW5lcyI6
 <span id="cb1-2"><a href=""></a><span class="fu">args</span>(quantile)   <span class="co"># just the arguments</span></span>
 <span id="cb1-3"><a href=""></a><span class="fu">example</span>(seq)     <span class="co"># runnable examples</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-Help pages are terse but complete. Read the <b>Arguments</b> and <b>Examples</b> sections first; skip <b>Details</b> until you need it.
-</p>
+</p><p>Help pages are terse but complete. Read the <b>Arguments</b> and <b>Examples</b> sections first; skip <b>Details</b> until you need it.</p>
+<p></p>
 </div>
 </section></section>
 <section>
@@ -744,8 +744,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQi
 <span id="cb2-4"><a href=""></a><span class="co"># EVERY session, in your script</span></span>
 <span id="cb2-5"><a href=""></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-<b>Install once, library every time.</b> Never put <code>install.packages()</code> in a script you share — it re-downloads on someone else’s machine without asking.
-</p>
+</p><p><b>Install once, library every time.</b> Never put <code>install.packages()</code> in a script you share — it re-downloads on someone else’s machine without asking.</p>
+<p></p>
 </div>
 <h3 id="worth-knowing-about">Worth knowing about</h3>
 <ul>
@@ -766,16 +766,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQi
 <h2>RStudio: the four panes</h2>
 <div class="ide">
 <div>
-<b>1 · Source (top-left)</b> Your script. This is the real work. Write here, not in the console. <span class="muted">Ctrl/Cmd + Enter runs the current line.</span>
+<p><b>1 · Source (top-left)</b> Your script. This is the real work. Write here, not in the console. <span class="muted">Ctrl/Cmd + Enter runs the current line.</span></p>
 </div>
 <div>
-<b>2 · Environment (top-right)</b> Every object you’ve created, with its size and type. Also the History tab.
+<p><b>2 · Environment (top-right)</b> Every object you’ve created, with its size and type. Also the History tab.</p>
 </div>
 <div>
-<b>3 · Console (bottom-left)</b> Where code actually executes. Fine for throwaway checks — anything you’d want again belongs in the script.
+<p><b>3 · Console (bottom-left)</b> Where code actually executes. Fine for throwaway checks — anything you’d want again belongs in the script.</p>
 </div>
 <div>
-<b>4 · Files / Plots / Packages / Help (bottom-right)</b> Your working directory, your figures, and the help pages.
+<p><b>4 · Files / Plots / Packages / Help (bottom-right)</b> Your working directory, your figures, and the help pages.</p>
 </div>
 </div>
 <div class="keypoint smaller">
@@ -792,14 +792,14 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQi
 <span id="cb3-4"><a href=""></a><span class="co"># paths are relative to the project root</span></span>
 <span id="cb3-5"><a href=""></a>births <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/births.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-The project root <i>is</i> your working directory. Move the folder, email it, put it on OneDrive — it still works.
-</p>
+</p><p>The project root <i>is</i> your working directory. Move the folder, email it, put it on OneDrive — it still works.</p>
+<p></p>
 <h3 id="not-this">Not this</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">setwd</span>(<span class="st">"C:/Users/shawken/Desktop/</span></span>
 <span id="cb4-2"><a href=""></a><span class="st">       thesis/final/FINAL2/data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-This runs on exactly one computer, until you reorganise your Desktop. It is the single most common reason a supervisor cannot run a student’s code.
-</p>
+</p><p>This runs on exactly one computer, until you reorganise your Desktop. It is the single most common reason a supervisor cannot run a student’s code.</p>
+<p></p>
 </div>
 <div class="fragment">
 <div class="smaller">
@@ -858,15 +858,15 @@ This runs on exactly one computer, until you reorganise your Desktop. It is the 
 <p>Free, runs in a browser, nothing to install, works on a Mac.</p>
 <p><a href="https://www.sas.com/en_ca/software/on-demand-for-academics.html"><code>sas.com/en_ca/software/on-demand-for-academics.html</code></a></p>
 <p class="small">
-Register with your <b>uOttawa</b> address. Approval takes a few minutes to a day. Do this <b>before</b> you need it for an assignment.
-</p>
+</p><p>Register with your <b>uOttawa</b> address. Approval takes a few minutes to a day. Do this <b>before</b> you need it for an assignment.</p>
+<p></p>
 <h3 id="other-routes">Other routes</h3>
 <ul>
-<li>uOttawa desktop licence (Windows only — Mac users need Parallels or a VM)</li>
-<li>ICES / TOHDW provide it inside their secure analytic environments
+<li><p>uOttawa desktop licence (Windows only — Mac users need Parallels or a VM)</p></li>
+<li><p>ICES / TOHDW provide it inside their secure analytic environments</p>
 <p class="small">
-I will demo in OnDemand now. The <code>.sas</code> files for this seminar are in the course folder — upload them and run along.
-</p></li>
+</p><p>I will demo in OnDemand now. The <code>.sas</code> files for this seminar are in the course folder — upload them and run along.</p>
+<p></p></li>
 </ul>
 </div>
 </section>
@@ -1012,9 +1012,9 @@ The mental model
 <h2>R ↔︎ SAS Rosetta stone</h2>
 <table class="caption-top">
 <colgroup>
-<col style="width: 22%">
-<col style="width: 39%">
-<col style="width: 39%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1108,13 +1108,13 @@ The mental model
 <span id="cb13-5"><a href=""></a>RUN;</span>
 <span id="cb13-6"><a href=""></a>/* N = 1239 */</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-Record what each version gave you. Reviewers ask.
-</p>
+</p><p>Record what each version gave you. Reviewers ask.</p>
+<p></p>
 <h3 id="recovering-from-unbalanced-quotes">Recovering from unbalanced quotes</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb14-1"><a href=""></a>*'; *"; */;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-If a stray quote makes SAS unresponsive, run that line (sometimes twice). Harmless if nothing is wrong; saves you a restart if something is. Tape it to your monitor.
-</p>
+</p><p>If a stray quote makes SAS unresponsive, run that line (sometimes twice). Harmless if nothing is wrong; saves you a restart if something is. Tape it to your monitor.</p>
+<p></p>
 </div>
 </section></section>
 <section>
@@ -1134,8 +1134,8 @@ If a stray quote makes SAS unresponsive, run that line (sometimes twice). Harmle
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"janitor"</span>,</span>
 <span id="cb15-2"><a href=""></a>                   <span class="st">"broom"</span>, <span class="st">"haven"</span>, <span class="st">"gtsummary"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-Both are free. Install R <b>first</b>, then RStudio.
-</p>
+</p><p>Both are free. Install R <b>first</b>, then RStudio.</p>
+<p></p>
 <h3 id="warm-up-10-minutes">2 · Warm-up (10 minutes)</h3>
 <p>Make a new RStudio <strong>Project</strong>, drop the seminar <code>data/</code> folder inside it, and in a script:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>births <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/births.csv"</span>)</span>
@@ -1143,8 +1143,8 @@ Both are free. Install R <b>first</b>, then RStudio.
 <span id="cb16-3"><a href=""></a><span class="fu">summary</span>(births<span class="sc">$</span>birth_weight_g)</span>
 <span id="cb16-4"><a href=""></a><span class="fu">table</span>(births<span class="sc">$</span>site)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p class="small">
-If that runs, you are ready for Session 2.
-</p>
+</p><p>If that runs, you are ready for Session 2.</p>
+<p></p>
 </div>
 <div class="fragment">
 <div class="smaller">
@@ -1176,8 +1176,8 @@ If that runs, you are ready for Session 2.
 <p><strong>Next week:</strong> a complete analysis — import, clean, join, summarise, plot, model — and an honest look at what AI coding assistants can and cannot do for an epidemiologist.</p>
 </div>
 <p class="small muted">
-Questions? <code>steven.hawken@uottawa.ca</code> · office hours posted in Brightspace
-</p>
+</p><p>Questions? <code>shawken@ohri.ca</code> ·</p>
+<p></p>
 
 <script type="webr-data">
 eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyIsImRwbHlyIiwiZ2dwbG90MiJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
