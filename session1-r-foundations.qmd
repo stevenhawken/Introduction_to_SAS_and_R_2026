@@ -2,7 +2,7 @@
 title: "Getting Started with R"
 subtitle: "…and a working tour of SAS  ·  Part 1 of 2"
 author: "Steven Hawken, PhD — Senior Scientist, OHRI, Associate Professor, School of Epidemiology & Public Health, University of Ottawa"
-date: today
+date: 21SEPT2026
 date-format: "D MMMM YYYY"
 format:
   live-revealjs:
